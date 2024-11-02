@@ -11,7 +11,7 @@ class UserPrinciple(
     private val attributes: Map<String, Any>,
 ) : UserDetails,
     OAuth2User {
-    override fun getName(): String = member.getId().toString()
+    override fun getName(): String = member.id.toString()
 
     override fun getAttributes(): Map<String, Any> = attributes
 
@@ -28,6 +28,8 @@ class UserPrinciple(
     override fun isCredentialsNonExpired(): Boolean = true
 
     override fun isEnabled(): Boolean = true
+
+    fun getId(): Long = name.toLong()
 
     companion object {
         private const val DEFAULT_PASSWORD = "password"

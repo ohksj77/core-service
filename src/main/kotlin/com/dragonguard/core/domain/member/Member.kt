@@ -12,6 +12,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.SoftDelete
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
@@ -19,6 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 @SoftDelete
 class Member(
     var name: String,
+    @NaturalId
     @Column(nullable = false, unique = true)
     var githubId: String,
     var profileImage: String,
