@@ -1,10 +1,10 @@
 plugins {
-    id("org.springframework.boot") version "3.3.2"
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    kotlin("plugin.jpa") version "1.9.24"
-    kotlin("jvm") version "1.9.24"
-    kotlin("plugin.spring") version "1.9.24"
+    kotlin("plugin.jpa") version "1.9.25"
 }
 
 group = "com.dragonguard"
@@ -12,13 +12,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -56,6 +50,12 @@ kotlin {
     }
 }
 
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
@@ -67,14 +67,4 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
-}
-
-noArg {
-    annotation("jakarta.persistence.Entity")
-}
-
-allOpen {
-    annotation("jakarta.persistence.Entity")
-    annotation("jakarta.persistence.Embeddable")
-    annotation("jakarta.persistence.MappedSuperclass")
 }

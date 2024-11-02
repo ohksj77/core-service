@@ -4,6 +4,9 @@ spring:
     group:
       dev: dev,env
       prod: prod,env
+  threads:
+    virtual:
+      enabled: true
 
 server:
   servlet:
