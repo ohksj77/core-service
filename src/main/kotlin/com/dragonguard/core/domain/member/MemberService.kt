@@ -2,6 +2,7 @@ package com.dragonguard.core.domain.member
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.stereotype.Service
 
@@ -38,4 +39,6 @@ class MemberService(
     }
 
     private fun getEntityByGithubId(githubId: String) = memberRepository.findByGithubId(githubId) ?: throw EntityNotFoundException()
+
+    fun getEntity(id: Long): Member = memberRepository.findByIdOrNull(id) ?: throw EntityNotFoundException()
 }
