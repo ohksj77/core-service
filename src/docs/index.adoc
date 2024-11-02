@@ -1,0 +1,11 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+= GitRank v2 API
+DragonGuard-JinJin
+
+include::auth.adoc[]
