@@ -1,5 +1,6 @@
 package com.dragonguard.core.global.audit
 
+import com.dragonguard.core.global.exception.NotInitializedException
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue
@@ -13,7 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.domain.Persistable
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
-import java.util.Objects
+import java.util.*
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
@@ -34,7 +35,7 @@ abstract class BaseEntity : Persistable<Long> {
     val isNewEntity: Boolean
         get() = _isNewEntity
 
-    override fun getId(): Long? = id
+    override fun getId(): Long? = id ?: throw NotInitializedException.entityId()
 
     override fun isNew(): Boolean = _isNewEntity
 

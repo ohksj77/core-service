@@ -2,6 +2,7 @@ package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.organization.Organization
 import com.dragonguard.core.global.audit.BaseEntity
+import com.dragonguard.core.global.exception.NotInitializedException
 import jakarta.persistence.CascadeType
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
@@ -46,6 +47,7 @@ class Member(
     var walletAddress: String? = null
     var refreshToken: String? = null
     var githubToken: String? = null
+        get() = field ?: throw NotInitializedException.memberGithubToken()
     var email: String? = null
 
     fun addRole(role: Role) {

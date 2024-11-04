@@ -9,7 +9,9 @@ import org.springframework.http.client.ClientHttpRequestFactory
 import org.springframework.http.client.JdkClientHttpRequestFactory
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestClient
+import java.net.http.HttpClient
 import java.time.Duration
+import java.util.concurrent.Executors
 
 @Configuration
 class RestClientConfig(
@@ -39,7 +41,13 @@ class RestClientConfig(
             }.build()
 
     private fun getClientHttpRequestFactory(): ClientHttpRequestFactory {
-        val requestFactory = JdkClientHttpRequestFactory()
+        val requestFactory =
+            JdkClientHttpRequestFactory(
+                HttpClient
+                    .newBuilder()
+                    .executor(Executors.newVirtualThreadPerTaskExecutor())
+                    .build(),
+            )
         requestFactory.setReadTimeout(Duration.ofSeconds(REQUEST_TIMEOUT_DURATION))
         return requestFactory
     }

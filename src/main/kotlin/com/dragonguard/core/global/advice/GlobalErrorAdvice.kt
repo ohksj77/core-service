@@ -1,5 +1,6 @@
 package com.dragonguard.core.global.advice
 
+import com.dragonguard.core.global.exception.NotInitializedException
 import com.dragonguard.core.global.exception.RestClientException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -11,4 +12,8 @@ class GlobalErrorAdvice {
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
     @ExceptionHandler(RestClientException::class)
     fun handleRestClientException(e: RestClientException): String = e.message
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(NotInitializedException::class)
+    fun handleNotInitializedException(e: NotInitializedException): String = e.message
 }
