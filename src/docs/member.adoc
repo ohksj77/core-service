@@ -1,0 +1,11 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Member
+
+=== 회원 기여도 업데이트 (비동기)
+
+operation::update member contributions[snippets='http-request,http-response']

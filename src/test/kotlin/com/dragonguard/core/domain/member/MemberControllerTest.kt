@@ -1,13 +1,10 @@
-package com.dragonguard.core.domain.auth
+package com.dragonguard.core.domain.member
 
-import com.dragonguard.core.config.security.jwt.JwtToken
 import com.dragonguard.core.support.docs.RestDocsTest
 import com.dragonguard.core.support.docs.RestDocsUtils
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.BDDMockito
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
@@ -15,40 +12,35 @@ import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@WebMvcTest(AuthController::class)
-class AuthControllerTest : RestDocsTest() {
-    @MockBean
-    private lateinit var authService: AuthService
-
+@WebMvcTest(MemberController::class)
+class MemberControllerTest : RestDocsTest() {
     @Test
-    fun `리프레시 토큰 발급`() {
+    fun `회원의 기여도 업데이트`() {
         // given
-        val jwtToken: JwtToken = JwtToken("1234.1234.1234", "4321.4321.4321")
         BDDMockito
-            .given(authService.refresh(ArgumentMatchers.any<String>(), ArgumentMatchers.any<String>()))
-            .willReturn(jwtToken)
+            .willDoNothing()
+            .given(memberService)
+            .updateContributions(any(Member::class.java))
 
         // when
         val perform: ResultActions =
             mockMvc.perform(
                 RestDocumentationRequestBuilders
-                    .get("/auth/refresh")
+                    .post("/members/contributions")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header("access_token", "4321.4321.4321")
-                    .header("refresh_token", "apfawfawfa.awfsfawef2.r4svfv32"),
+                    .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
             )
 
         // then
         perform
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.access_token").value(jwtToken.accessToken))
+            .andExpect(MockMvcResultMatchers.status().isAccepted())
 
         // docs
         perform
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "refresh jwt token",
+                    "update member contributions",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
                 ),

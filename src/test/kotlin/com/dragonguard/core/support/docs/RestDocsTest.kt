@@ -6,6 +6,7 @@ import com.dragonguard.core.domain.member.MemberService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -31,21 +32,23 @@ abstract class RestDocsTest {
     protected lateinit var mockMvc: MockMvc
 
     @Autowired
-    private val objectMapper: ObjectMapper? = null
+    private lateinit var objectMapper: ObjectMapper
 
     @MockBean
-    private val jpaMetamodelMappingContext: JpaMetamodelMappingContext? = null
+    private lateinit var jpaMetamodelMappingContext: JpaMetamodelMappingContext
 
     @MockBean
-    private val jwtValidator: JwtValidator? = null
+    private lateinit var jwtValidator: JwtValidator
 
     @MockBean
-    private val jwtTokenProvider: JwtProvider? = null
+    private lateinit var jwtTokenProvider: JwtProvider
 
     @MockBean
-    private val memberService: MemberService? = null
+    protected lateinit var memberService: MemberService
 
-    protected fun toRequestBody(obj: Any): String = objectMapper!!.writeValueAsString(obj)
+    protected fun toRequestBody(obj: Any): String = objectMapper.writeValueAsString(obj)
+
+    fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
 
     @BeforeEach
     fun setupMockMvc(

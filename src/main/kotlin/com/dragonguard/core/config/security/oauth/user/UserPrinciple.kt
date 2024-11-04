@@ -29,7 +29,7 @@ class UserPrinciple(
 
     override fun isEnabled(): Boolean = true
 
-    fun getId(): Long = name.toLong()
+    fun getMemberId(): Long = name.toLong()
 
     companion object {
         private const val DEFAULT_PASSWORD = "password"

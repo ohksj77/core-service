@@ -1,5 +1,7 @@
-package com.dragonguard.core.global.dto
+package com.dragonguard.core.global.advice
 
+import com.dragonguard.core.global.dto.ErrorResponse
+import com.dragonguard.core.global.dto.SuccessResponse
 import org.springframework.core.MethodParameter
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
