@@ -27,6 +27,6 @@ class AuthorizedMemberArgumentResolver(
     ): Any? {
         val principal: UserPrinciple =
             SecurityContextHolder.getContext().authentication.principal as UserPrinciple
-        return memberService.getEntity(principal.getId())
+        return memberService.getEntity(principal.getMemberId())
     }
 }

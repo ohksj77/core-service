@@ -27,7 +27,7 @@ class AuthService(
     private fun getMemberAndUpdateRefreshToken(userPrinciple: UserPrinciple): JwtToken {
         val jwtToken: JwtToken = jwtProvider.createToken(userPrinciple)
 
-        val member = memberService.getEntity(userPrinciple.getId())
+        val member = memberService.getEntity(userPrinciple.getMemberId())
 
         member.refreshToken = jwtToken.refreshToken
         return jwtToken
