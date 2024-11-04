@@ -6,11 +6,13 @@ import jakarta.persistence.CollectionTable
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.OneToMany
+import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.SoftDelete
 
 @Entity
 @SoftDelete
 class GitRepo(
+    @NaturalId
     val name: String,
     @CollectionTable
     @ElementCollection

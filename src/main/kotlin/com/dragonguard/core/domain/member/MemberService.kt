@@ -1,5 +1,6 @@
 package com.dragonguard.core.domain.member
 
+import com.dragonguard.core.domain.contribution.ContributionService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service
 class MemberService(
     private val memberRepository: MemberRepository,
     private val memberMapper: MemberMapper,
+    private val contributionService: ContributionService,
 ) {
     @Transactional
     fun joinIfNone(
@@ -41,4 +43,8 @@ class MemberService(
     private fun getEntityByGithubId(githubId: String) = memberRepository.findByGithubId(githubId) ?: throw EntityNotFoundException()
 
     fun getEntity(id: Long): Member = memberRepository.findByIdOrNull(id) ?: throw EntityNotFoundException()
+
+    fun updateContributions(member: Member) {
+        contributionService.updateContributions(member)
+    }
 }
