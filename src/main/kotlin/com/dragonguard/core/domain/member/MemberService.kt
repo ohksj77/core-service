@@ -1,6 +1,7 @@
 package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.contribution.ContributionService
+import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.global.exception.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -47,4 +48,6 @@ class MemberService(
     fun updateContributions(member: Member) {
         contributionService.updateContributions(member)
     }
+
+    fun getContributions(memberId: Long): List<ContributionResponse> = contributionService.getMemberContributions(memberId)
 }

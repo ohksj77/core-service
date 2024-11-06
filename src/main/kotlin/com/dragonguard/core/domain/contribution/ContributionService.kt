@@ -1,5 +1,6 @@
 package com.dragonguard.core.domain.contribution
 
+import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.member.Member
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -20,4 +21,10 @@ class ContributionService(
             contributionMapper.toEntities(contributionClientResult, member, year),
         )
     }
+
+    fun getMemberContributions(memberId: Long): List<ContributionResponse> =
+        contributionMapper.toResponses(
+            contributionRepository
+                .findByMemberId(memberId),
+        )
 }
