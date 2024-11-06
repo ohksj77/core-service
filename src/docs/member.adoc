@@ -9,3 +9,4 @@
 === 회원 기여도 업데이트 (비동기)
 
 operation::update member contributions[snippets='http-request,http-response']
+operation::get member contributions[snippets='http-request,http-response']

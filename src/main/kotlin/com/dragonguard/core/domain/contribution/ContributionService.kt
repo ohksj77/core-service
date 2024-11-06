@@ -12,7 +12,7 @@ class ContributionService(
     private val contributionClientService: ContributionClientService,
     private val contributionMapper: ContributionMapper,
 ) {
-    @Async
+    @Async("virtualAsyncTaskExecutor")
     fun updateContributions(member: Member) {
         val year: Int = LocalDateTime.now().year
         val contributionClientResult = contributionClientService.getContributions(member, year)
