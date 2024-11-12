@@ -1,5 +1,8 @@
 package com.dragonguard.core.domain.member
 
+import com.dragonguard.core.domain.contribution.Contribution
+import com.dragonguard.core.domain.contribution.ContributionType
+import com.dragonguard.core.domain.contribution.Contributions
 import com.dragonguard.core.domain.organization.Organization
 import com.dragonguard.core.global.audit.BaseEntity
 import com.dragonguard.core.global.exception.NotInitializedException
@@ -7,6 +10,7 @@ import jakarta.persistence.CascadeType
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
 import jakarta.persistence.ElementCollection
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -44,15 +48,30 @@ class Member(
     val roles: List<Role>
         get() = _roles.toList()
 
-    var walletAddress: String? = null
+    @Enumerated(EnumType.STRING)
+    var tier: Tier = Tier.SPROUT
+
+    @Embedded
+    private val _contributions: Contributions = Contributions()
+    val contributions: Contributions
+        get() = _contributions
+
     var refreshToken: String? = null
     var githubToken: String? = null
         get() = field ?: throw NotInitializedException.memberGithubToken()
     var email: String? = null
 
+    fun updateTier() {
+        _contributions.let {
+            tier = Tier.fromPoint(it.total())
+        }
+    }
+
     fun addRole(role: Role) {
         _roles.add(role)
     }
+
+    fun getHighestAuthStep(): AuthStep = AuthStep.highestAuthStep(authStep)
 
     fun organize(organization: Organization) {
         this.organization = organization
@@ -66,16 +85,8 @@ class Member(
 
     fun hasNoAuthStep(): Boolean = authStep.isEmpty()
 
-    fun updateWalletAddress(walletAddress: String) {
-        this.walletAddress = walletAddress
-    }
-
     fun updateGithubToken(githubToken: String) {
         this.githubToken = githubToken
-    }
-
-    fun updateEmail(email: String) {
-        this.email = email
     }
 
     fun join(
@@ -86,4 +97,13 @@ class Member(
         this.name = name
         this.profileImage = profileImage
     }
+
+    fun addContribution(contributions: List<Contribution>) {
+        this._contributions.addAll(contributions)
+        updateTier()
+    }
+
+    fun contributionNumOfType(type: ContributionType): Int = _contributions.numOfType(type)
+
+    fun getTotalContribution(): Int = _contributions.total()
 }

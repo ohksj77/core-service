@@ -1,6 +1,7 @@
 package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
+import com.dragonguard.core.domain.member.dto.MemberProfileResponse
 import com.dragonguard.core.global.auth.AuthorizedMember
 import com.dragonguard.core.global.auth.AuthorizedMemberId
 import org.springframework.http.HttpStatus
@@ -26,4 +27,10 @@ class MemberController(
     fun getContributions(
         @AuthorizedMemberId memberId: Long,
     ): List<ContributionResponse> = memberService.getContributions(memberId)
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("me")
+    fun getProfile(
+        @AuthorizedMember member: Member,
+    ): MemberProfileResponse = memberService.getProfile(member)
 }

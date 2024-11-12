@@ -1,6 +1,6 @@
 package com.dragonguard.core.domain.auth
 
-import com.dragonguard.core.domain.member.exception.JwtProcessingException
+import com.dragonguard.core.domain.auth.exception.JwtProcessingException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus

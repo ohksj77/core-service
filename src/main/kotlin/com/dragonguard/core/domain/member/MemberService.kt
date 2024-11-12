@@ -1,7 +1,8 @@
 package com.dragonguard.core.domain.member
 
-import com.dragonguard.core.domain.contribution.ContributionService
+import com.dragonguard.core.domain.contribution.ContributionFacade
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
+import com.dragonguard.core.domain.member.dto.MemberProfileResponse
 import com.dragonguard.core.global.exception.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service
 class MemberService(
     private val memberRepository: MemberRepository,
     private val memberMapper: MemberMapper,
-    private val contributionService: ContributionService,
+    private val contributionFacade: ContributionFacade,
 ) {
     @Transactional
     fun joinIfNone(
@@ -46,8 +47,13 @@ class MemberService(
     fun getEntity(id: Long): Member = memberRepository.findByIdOrNull(id) ?: throw EntityNotFoundException.member()
 
     fun updateContributions(member: Member) {
-        contributionService.updateContributions(member)
+        contributionFacade.updateContributions(member)
     }
 
-    fun getContributions(memberId: Long): List<ContributionResponse> = contributionService.getMemberContributions(memberId)
+    fun getContributions(memberId: Long): List<ContributionResponse> = contributionFacade.getMemberContributions(memberId)
+
+    fun getProfile(member: Member): MemberProfileResponse {
+        val memberProfileRank = contributionFacade.getMemberProfileRank(member)
+        return memberMapper.toProfileResponse(member, memberProfileRank)
+    }
 }

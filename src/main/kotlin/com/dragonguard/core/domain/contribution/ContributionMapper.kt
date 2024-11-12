@@ -21,7 +21,7 @@ class ContributionMapper {
                 ContributionType.CODE_REVIEW -> contributionClientResult.codeReview
             },
             year,
-            member.id!!,
+            member,
         )
     }
 

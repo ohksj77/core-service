@@ -13,3 +13,7 @@ operation::update member contributions[snippets='http-request,http-response']
 === 회원 기여도 조회
 
 operation::get member contributions[snippets='http-request,http-response']
+
+=== 회원 프로필 조회 (메인 화면)
+
+operation::get member profile[snippets='http-request,http-response']
