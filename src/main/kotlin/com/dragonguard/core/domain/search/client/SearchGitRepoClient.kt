@@ -1,7 +1,7 @@
 package com.dragonguard.core.domain.search.client
 
 import com.dragonguard.core.domain.search.client.dto.SearchGitRepoClientResponse
-import com.dragonguard.core.domain.search.dto.SearchGitRepoRequest
+import com.dragonguard.core.domain.search.dto.SearchRequest
 import com.dragonguard.core.global.exception.RestClientException
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -17,12 +17,13 @@ class SearchGitRepoClient(
     }
 
     fun request(
-        request: SearchGitRepoRequest,
+        request: SearchRequest,
+        filters: List<String>?,
         githubToken: String,
     ): SearchGitRepoClientResponse =
         restClient
             .get()
-            .uri(PATH.format(request.q, request.page) + request.filters?.joinToString { FILTER_DELIMITER })
+            .uri(PATH.format(request.q, request.page) + filters?.joinToString { FILTER_DELIMITER })
             .headers { it.setBearerAuth(githubToken) }
             .accept(MediaType.APPLICATION_JSON)
             .acceptCharset(Charsets.UTF_8)

@@ -1,0 +1,15 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Search
+
+=== 회원 검색
+
+operation::search member[snippets='http-request,http-response']
+
+=== Repository 검색
+
+operation::search git repo[snippets='http-request,http-response']

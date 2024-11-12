@@ -9,3 +9,5 @@
 DragonGuard-JinJin
 
 include::auth.adoc[]
+include::member.adoc[]
+include::search.adoc[]

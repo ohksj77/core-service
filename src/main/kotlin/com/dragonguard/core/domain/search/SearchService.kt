@@ -6,8 +6,7 @@ import com.dragonguard.core.domain.search.client.SearchGitRepoClient
 import com.dragonguard.core.domain.search.client.SearchMemberClient
 import com.dragonguard.core.domain.search.client.dto.SearchGitRepoClientResponse
 import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
-import com.dragonguard.core.domain.search.dto.SearchGitRepoRequest
-import com.dragonguard.core.domain.search.dto.SearchMemberRequest
+import com.dragonguard.core.domain.search.dto.SearchRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,7 +18,7 @@ class SearchService(
 ) {
     @Transactional(readOnly = true)
     fun searchMembers(
-        request: SearchMemberRequest,
+        request: SearchRequest,
         member: Member,
     ): List<SearchMemberClientResponse.Companion.SearchMemberResponse> {
         val result = member.githubToken?.let { searchMemberClient.request(request, it) }
@@ -28,8 +27,9 @@ class SearchService(
     }
 
     fun searchGitRepos(
-        request: SearchGitRepoRequest,
+        request: SearchRequest,
+        filters: List<String>?,
         member: Member,
     ): List<SearchGitRepoClientResponse.Companion.SearchGitRepoClientResponseItem> =
-        member.githubToken?.let { searchGitRepoClient.request(request, it).items } ?: emptyList()
+        member.githubToken?.let { searchGitRepoClient.request(request, filters, it).items } ?: emptyList()
 }

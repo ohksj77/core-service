@@ -3,9 +3,9 @@ package com.dragonguard.core.domain.search.dto
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
 
-data class SearchMemberRequest(
+data class SearchRequest(
     @field:NotBlank
-    val q: String,
+    var q: String? = null,
     @field:Positive
-    val page: Int,
+    var page: Int? = null,
 )

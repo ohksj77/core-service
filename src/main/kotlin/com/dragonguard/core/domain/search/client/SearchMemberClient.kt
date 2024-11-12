@@ -1,7 +1,7 @@
 package com.dragonguard.core.domain.search.client
 
 import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
-import com.dragonguard.core.domain.search.dto.SearchMemberRequest
+import com.dragonguard.core.domain.search.dto.SearchRequest
 import com.dragonguard.core.global.exception.RestClientException
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -16,7 +16,7 @@ class SearchMemberClient(
     }
 
     fun request(
-        request: SearchMemberRequest,
+        request: SearchRequest,
         githubToken: String,
     ): SearchMemberClientResponse =
         restClient
