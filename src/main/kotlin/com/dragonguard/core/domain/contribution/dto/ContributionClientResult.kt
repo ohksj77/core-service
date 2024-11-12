@@ -5,4 +5,6 @@ data class ContributionClientResult(
     val pullRequest: Int,
     val issue: Int,
     val codeReview: Int,
-)
+) {
+    fun getTotal(): Int = commit + pullRequest + issue + codeReview
+}

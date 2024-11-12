@@ -1,4 +1,4 @@
-package com.dragonguard.core.domain.member.exception
+package com.dragonguard.core.domain.auth.exception
 
 class JwtProcessingException(
     override val message: String,

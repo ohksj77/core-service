@@ -4,8 +4,8 @@ import com.dragonguard.core.config.security.jwt.JwtProvider
 import com.dragonguard.core.config.security.jwt.JwtToken
 import com.dragonguard.core.config.security.jwt.JwtValidator
 import com.dragonguard.core.config.security.oauth.user.UserPrinciple
+import com.dragonguard.core.domain.auth.exception.JwtProcessingException
 import com.dragonguard.core.domain.member.MemberService
-import com.dragonguard.core.domain.member.exception.JwtProcessingException
 import org.springframework.stereotype.Service
 
 @Service

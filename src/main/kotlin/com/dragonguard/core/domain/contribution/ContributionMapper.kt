@@ -1,6 +1,7 @@
 package com.dragonguard.core.domain.contribution
 
 import com.dragonguard.core.domain.contribution.dto.ContributionClientResult
+import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.member.Member
 import org.springframework.stereotype.Component
 
@@ -20,7 +21,16 @@ class ContributionMapper {
                 ContributionType.CODE_REVIEW -> contributionClientResult.codeReview
             },
             year,
-            member.id!!,
+            member,
         )
     }
+
+    fun toResponses(contributions: List<Contribution>): List<ContributionResponse> = contributions.map(::toResponse)
+
+    private fun toResponse(contribution: Contribution) =
+        ContributionResponse(
+            contribution.contributionType,
+            contribution.amount,
+            contribution.createdAt,
+        )
 }
