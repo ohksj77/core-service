@@ -22,7 +22,7 @@ class SearchGitRepoClient(
     ): SearchGitRepoClientResponse =
         restClient
             .get()
-            .uri(PATH.format(request.name, request.page) + request.filters?.joinToString { FILTER_DELIMITER })
+            .uri(PATH.format(request.q, request.page) + request.filters?.joinToString { FILTER_DELIMITER })
             .headers { it.setBearerAuth(githubToken) }
             .accept(MediaType.APPLICATION_JSON)
             .acceptCharset(Charsets.UTF_8)

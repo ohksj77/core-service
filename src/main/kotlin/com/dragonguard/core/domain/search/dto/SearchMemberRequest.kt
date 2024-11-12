@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Positive
 
 data class SearchMemberRequest(
     @field:NotBlank
-    val name: String,
+    val q: String,
     @field:Positive
     val page: Int,
 )

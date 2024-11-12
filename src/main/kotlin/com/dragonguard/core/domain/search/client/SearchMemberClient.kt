@@ -21,7 +21,7 @@ class SearchMemberClient(
     ): SearchMemberClientResponse =
         restClient
             .get()
-            .uri(PATH.format(request.name, request.page))
+            .uri(PATH.format(request.q, request.page))
             .headers { it.setBearerAuth(githubToken) }
             .accept(MediaType.APPLICATION_JSON)
             .acceptCharset(Charsets.UTF_8)
