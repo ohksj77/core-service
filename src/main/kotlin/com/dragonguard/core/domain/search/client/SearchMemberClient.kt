@@ -1,7 +1,7 @@
 package com.dragonguard.core.domain.search.client
 
 import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
-import com.dragonguard.core.domain.search.dto.SearchMemberRequest
+import com.dragonguard.core.domain.search.dto.SearchRequest
 import com.dragonguard.core.global.exception.RestClientException
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -16,12 +16,12 @@ class SearchMemberClient(
     }
 
     fun request(
-        request: SearchMemberRequest,
+        request: SearchRequest,
         githubToken: String,
     ): SearchMemberClientResponse =
         restClient
             .get()
-            .uri(PATH.format(request.name, request.page))
+            .uri(PATH.format(request.q, request.page))
             .headers { it.setBearerAuth(githubToken) }
             .accept(MediaType.APPLICATION_JSON)
             .acceptCharset(Charsets.UTF_8)

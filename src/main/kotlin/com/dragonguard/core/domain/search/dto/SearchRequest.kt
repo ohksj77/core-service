@@ -3,10 +3,9 @@ package com.dragonguard.core.domain.search.dto
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
 
-data class SearchGitRepoRequest(
+data class SearchRequest(
     @field:NotBlank
-    val name: String,
+    var q: String? = null,
     @field:Positive
-    val page: Int,
-    val filters: List<String>?,
+    var page: Int? = null,
 )

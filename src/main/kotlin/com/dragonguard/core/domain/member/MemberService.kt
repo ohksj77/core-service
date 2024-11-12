@@ -3,6 +3,8 @@ package com.dragonguard.core.domain.member
 import com.dragonguard.core.domain.contribution.ContributionFacade
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
+import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
+import com.dragonguard.core.domain.search.dto.ServiceMembers
 import com.dragonguard.core.global.exception.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -56,4 +58,11 @@ class MemberService(
         val memberProfileRank = contributionFacade.getMemberProfileRank(member)
         return memberMapper.toProfileResponse(member, memberProfileRank)
     }
+
+    fun isServiceMember(searchMemberResponses: List<SearchMemberClientResponse.Companion.SearchMemberClientResponseItem>): ServiceMembers =
+        searchMemberResponses
+            .filter {
+                memberRepository.existsByGithubId(it.login)
+            }.map { it.login }
+            .let { ServiceMembers(it) }
 }
