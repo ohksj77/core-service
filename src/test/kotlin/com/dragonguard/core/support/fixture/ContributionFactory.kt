@@ -2,18 +2,28 @@ package com.dragonguard.core.support.fixture
 
 import com.dragonguard.core.domain.contribution.Contribution
 import com.dragonguard.core.domain.contribution.ContributionType
+import com.dragonguard.core.domain.contribution.dto.ContributionResponse
+import com.dragonguard.core.domain.member.Member
 import java.time.LocalDateTime
 
 class ContributionFactory {
     companion object {
-        fun createEntity(memberId: Long): Contribution = Contribution(ContributionType.ISSUE, 100, LocalDateTime.now().year, memberId)
+        fun createEntity(member: Member): Contribution = Contribution(ContributionType.ISSUE, 100, LocalDateTime.now().year, member)
 
-        fun createEntities(memberId: Long): List<Contribution> =
+        fun createEntities(member: Member): List<Contribution> =
             listOf(
-                Contribution(ContributionType.ISSUE, 100, LocalDateTime.now().year, memberId),
-                Contribution(ContributionType.PULL_REQUEST, 200, LocalDateTime.now().year, memberId),
-                Contribution(ContributionType.COMMIT, 400, LocalDateTime.now().year, memberId),
-                Contribution(ContributionType.CODE_REVIEW, 150, LocalDateTime.now().year, memberId),
+                Contribution(ContributionType.ISSUE, 100, LocalDateTime.now().year, member),
+                Contribution(ContributionType.PULL_REQUEST, 200, LocalDateTime.now().year, member),
+                Contribution(ContributionType.COMMIT, 400, LocalDateTime.now().year, member),
+                Contribution(ContributionType.CODE_REVIEW, 150, LocalDateTime.now().year, member),
+            )
+
+        fun createResponse() =
+            listOf(
+                ContributionResponse(ContributionType.ISSUE, 100, LocalDateTime.now()),
+                ContributionResponse(ContributionType.COMMIT, 300, LocalDateTime.now()),
+                ContributionResponse(ContributionType.CODE_REVIEW, 200, LocalDateTime.now()),
+                ContributionResponse(ContributionType.PULL_REQUEST, 150, LocalDateTime.now()),
             )
     }
 }

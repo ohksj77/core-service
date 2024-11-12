@@ -6,9 +6,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class ContributionServiceTest : LoginTest() {
+class ContributionFacadeTest : LoginTest() {
     @Autowired
-    private lateinit var contributionService: ContributionService
+    private lateinit var contributionFacade: ContributionFacade
 
     @Autowired
     private lateinit var contributionRepository: ContributionRepository
@@ -16,11 +16,11 @@ class ContributionServiceTest : LoginTest() {
     @Test
     fun `회원의 기여도 조회`() {
         // given
-        val contributions = ContributionFactory.createEntities(loginMember.id!!)
+        val contributions = ContributionFactory.createEntities(loginMember)
         contributionRepository.saveAll(contributions)
 
         // when
-        val result = contributionService.getMemberContributions(loginMember.id!!)
+        val result = contributionFacade.getMemberContributions(loginMember.id!!)
 
         // then
         assertThat(result).isNotEmpty
