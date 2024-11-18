@@ -1,6 +1,6 @@
 package com.dragonguard.core.support.auth
 
-import org.springframework.context.annotation.Configuration
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Import
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
     MockAuthorizedMemberArgumentResolver::class,
     MockAuthorizedMemberIdArgumentResolver::class,
 )
-@Configuration
+@TestConfiguration
 class WebConfig(
     private val mockAuthorizedMemberArgumentResolver: MockAuthorizedMemberArgumentResolver,
     private val mockAuthorizedMemberIdArgumentResolver: MockAuthorizedMemberIdArgumentResolver,
