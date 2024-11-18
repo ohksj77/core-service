@@ -8,10 +8,14 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -47,6 +51,9 @@ class MemberControllerTest : RestDocsTest() {
                     "update member contributions",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                 ),
             )
     }
@@ -84,6 +91,9 @@ class MemberControllerTest : RestDocsTest() {
                     "get member contributions",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     responseFields(
                         fieldWithPath("code").description("http 상태 코드"),
                         fieldWithPath("message").description("성공 메시지"),
@@ -127,6 +137,9 @@ class MemberControllerTest : RestDocsTest() {
                     "get member profile",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     responseFields(
                         fieldWithPath("code").description("http 상태 코드"),
                         fieldWithPath("message").description("성공 메시지"),
@@ -182,6 +195,9 @@ class MemberControllerTest : RestDocsTest() {
                     "get verify member",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     responseFields(
                         fieldWithPath("code").description("http 상태 코드"),
                         fieldWithPath("message").description("성공 메시지"),
@@ -217,6 +233,9 @@ class MemberControllerTest : RestDocsTest() {
                     "delete member",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                 ),
             )
     }
@@ -248,6 +267,9 @@ class MemberControllerTest : RestDocsTest() {
                     "get member details me",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     responseFields(
                         fieldWithPath("code").description("http 상태 코드"),
                         fieldWithPath("message").description("성공 메시지"),
@@ -274,7 +296,8 @@ class MemberControllerTest : RestDocsTest() {
         val perform: ResultActions =
             mockMvc.perform(
                 RestDocumentationRequestBuilders
-                    .get("/members/details?githubId=ohksj77")
+                    .get("/members/details")
+                    .param("githubId", "ohksj77")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
             )
@@ -291,6 +314,13 @@ class MemberControllerTest : RestDocsTest() {
                     "get member details",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
+                    queryParameters(
+                        parameterWithName("githubId")
+                            .description("깃허브 id")
+                    ),
                     responseFields(
                         fieldWithPath("code").description("http 상태 코드"),
                         fieldWithPath("message").description("성공 메시지"),

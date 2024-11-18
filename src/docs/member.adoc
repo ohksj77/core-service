@@ -8,28 +8,28 @@
 
 === 회원 기여도 업데이트 (비동기)
 
-operation::update member contributions[snippets='http-request,http-response']
+operation::update member contributions[snippets='http-request,http-response,request-headers']
 
 === 회원 기여도 조회
 
-operation::get member contributions[snippets='http-request,http-response']
+operation::get member contributions[snippets='http-request,http-response,request-headers,response-fields']
 
 === 회원 프로필 조회 (메인 화면)
 
-operation::get member profile[snippets='http-request,http-response']
+operation::get member profile[snippets='http-request,http-response,request-headers,response-fields']
 
 === 회원 인증 완료 여부 조회
 
-operation::get verify member[snippets='http-request,http-response']
+operation::get verify member[snippets='http-request,http-response,request-headers,response-fields']
 
 === 회원 탈퇴
 
-operation::delete member[snippets='http-request,http-response']
+operation::delete member[snippets='http-request,http-response,request-headers']
 
 === 회원 개인 상세 조회
 
-operation::get member details me[snippets='http-request,http-response']
+operation::get member details me[snippets='http-request,http-response,request-headers,response-fields']
 
 === 타회원 상세 조회
 
-operation::get member details[snippets='http-request,http-response']
+operation::get member details[snippets='http-request,http-response,request-headers,query-parameters,response-fields']

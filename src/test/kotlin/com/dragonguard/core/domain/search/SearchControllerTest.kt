@@ -10,6 +10,8 @@ import org.mockito.BDDMockito
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -60,6 +62,9 @@ class SearchControllerTest : RestDocsTest() {
                     "search member",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     queryParameters(
                         parameterWithName("type").description("검색 타입 (MEMBER, GIT_REPO)"),
                         parameterWithName("q").description("검색어"),
@@ -115,6 +120,9 @@ class SearchControllerTest : RestDocsTest() {
                     "search git repo",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     queryParameters(
                         parameterWithName("type").description("검색 타입 (MEMBER, GIT_REPO)"),
                         parameterWithName("q").description("검색어"),

@@ -8,8 +8,9 @@
 
 === 조직 생성
 
-operation::post organization[snippets='http-request,http-response']
+operation::post organization[snippets='http-request,http-response,request-headers,request-fields,response-fields']
 
 === 조직 회원 추가 요청
 
-operation::post organization join[snippets='http-request,http-response']
+operation::post organization join[snippets='http-request,http-response,request-headers,request-fields,response-fields']
+

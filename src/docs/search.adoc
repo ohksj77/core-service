@@ -8,8 +8,8 @@
 
 === 회원 검색
 
-operation::search member[snippets='http-request,http-response']
+operation::search member[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
 
 === Repository 검색
 
-operation::search git repo[snippets='http-request,http-response']
+operation::search git repo[snippets='http-request,http-response,request-headers,query-parameters,response-fields']

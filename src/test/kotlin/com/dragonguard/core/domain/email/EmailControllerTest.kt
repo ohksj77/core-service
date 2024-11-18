@@ -7,6 +7,8 @@ import org.mockito.BDDMockito
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
@@ -47,6 +49,9 @@ class EmailControllerTest : RestDocsTest() {
                     "resend email",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestHeaders(
+                        headerWithName("Authorization").description("Bearer jwt 액세스 토큰"),
+                    ),
                     pathParameters(
                         parameterWithName("id").description("재전송할 이메일 코드의 고유 식별자")
                     )
