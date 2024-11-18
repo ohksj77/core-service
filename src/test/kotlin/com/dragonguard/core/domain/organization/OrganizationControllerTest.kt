@@ -13,6 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -64,6 +67,16 @@ class OrganizationControllerTest : RestDocsTest() {
                     "post organization",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestFields(
+                        fieldWithPath("name").description("조직 이름"),
+                        fieldWithPath("email_end_point").description("조직 도메인"),
+                        fieldWithPath("organization_type").description("조직 유형")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.id").description("생성된 조직의 고유 식별자")
+                    )
                 ),
             )
     }
@@ -108,6 +121,15 @@ class OrganizationControllerTest : RestDocsTest() {
                     "post organization join",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    requestFields(
+                        fieldWithPath("organization_id").description("조직 고유 식별자"),
+                        fieldWithPath("email").description("회원 이메일")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.id").description("생성된 이메일 코드의 고유 식별자")
+                    )
                 ),
             )
     }

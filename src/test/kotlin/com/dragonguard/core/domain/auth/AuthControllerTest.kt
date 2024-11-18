@@ -11,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -51,6 +53,12 @@ class AuthControllerTest : RestDocsTest() {
                     "refresh jwt token",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.access_token").description("생성된 jwt 액세스 토큰"),
+                        fieldWithPath("data.refresh_token").description("생성된 jwt 리프레시 토큰"),
+                    )
                 ),
             )
     }
