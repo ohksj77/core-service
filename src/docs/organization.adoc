@@ -1,0 +1,15 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Organization
+
+=== 조직 생성
+
+operation::post organization[snippets='http-request,http-response']
+
+=== 조직 회원 추가 요청
+
+operation::post organization join[snippets='http-request,http-response']
