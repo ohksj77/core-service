@@ -1,5 +1,7 @@
 package com.dragonguard.core.domain.email
 
+import com.dragonguard.core.domain.email.dto.EmailCheckRequest
+import com.dragonguard.core.domain.email.dto.EmailCheckResponse
 import com.dragonguard.core.domain.email.dto.EmailSendRequest
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.global.exception.EntityNotFoundException
@@ -24,5 +26,10 @@ class EmailService(
     fun resend(id: Long) {
         val email: Email = emailRepository.findByIdOrNull(id) ?: throw EntityNotFoundException.email()
         emailSender.send(EmailSendRequest(email.email, email.code))
+    }
+
+    fun check(request: EmailCheckRequest, id: Long): EmailCheckResponse {
+        val email: Email = emailRepository.findByIdOrNull(id) ?: throw EntityNotFoundException.email()
+        return EmailCheckResponse(email.code == request.code)
     }
 }
