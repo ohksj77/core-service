@@ -3,11 +3,13 @@ package com.dragonguard.core.global.advice
 import com.dragonguard.core.global.dto.ErrorResponse
 import com.dragonguard.core.global.dto.SuccessResponse
 import org.springframework.core.MethodParameter
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 
@@ -26,9 +28,17 @@ class ResponseWrapper : ResponseBodyAdvice<Any?> {
         request: ServerHttpRequest,
         response: ServerHttpResponse,
     ): Any? {
-        if (body is String && returnType.hasMethodAnnotation(ExceptionHandler::class.java)) {
-            return ErrorResponse(body)
+        val statusCode = returnType
+            .getMethodAnnotation(ResponseStatus::class.java)
+            ?.code
+            ?.value()
+            ?: HttpStatus.OK.value()
+
+        return when {
+            body is String && returnType.hasMethodAnnotation(ExceptionHandler::class.java) ->
+                ErrorResponse(statusCode, body)
+
+            else -> SuccessResponse(statusCode, body)
         }
-        return SuccessResponse(body)
     }
 }
