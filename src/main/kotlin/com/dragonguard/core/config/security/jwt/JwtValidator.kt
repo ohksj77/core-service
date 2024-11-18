@@ -2,6 +2,7 @@ package com.dragonguard.core.config.security.jwt
 
 import com.dragonguard.core.config.security.oauth.user.UserPrincipleMapper
 import com.dragonguard.core.domain.member.MemberRepository
+import com.dragonguard.core.domain.member.Role
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.springframework.data.repository.findByIdOrNull
@@ -25,6 +26,11 @@ class JwtValidator(
         return UsernamePasswordAuthenticationToken(loginUser, CREDENTIAL, loginUser?.authorities)
     }
 
+    fun isAdmin(accessToken: String): Boolean {
+        val claims = getTokenBodyClaims(accessToken)
+        return claims[ROLE].toString() == Role.ROLE_ADMIN.name
+    }
+
     fun extractIdentifier(claims: Claims): Long = claims[ID, String::class.java].toLong()
 
     fun getTokenBodyClaims(accessToken: String?): Claims =
@@ -38,5 +44,6 @@ class JwtValidator(
     companion object {
         private const val CREDENTIAL = ""
         private const val ID = "id"
+        private const val ROLE = "role"
     }
 }

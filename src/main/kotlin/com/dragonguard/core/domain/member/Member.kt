@@ -67,6 +67,8 @@ class Member(
         _roles.add(role)
     }
 
+    fun getHighestRole(): Role = roles.maxOrNull() ?: Role.ROLE_USER
+
     fun organize(organization: Organization) {
         this.organization = organization
     }
