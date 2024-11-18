@@ -29,7 +29,7 @@ class MemberMapper {
             member.contributionNumOfType(ContributionType.PULL_REQUEST),
             member.contributionNumOfType(ContributionType.CODE_REVIEW),
             member.tier,
-            member.getHighestAuthStep(),
+            member.authStep,
             member.profileImage,
             profileRank.rank,
             member.getTotalContribution(),

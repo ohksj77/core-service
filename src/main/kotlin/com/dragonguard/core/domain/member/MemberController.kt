@@ -2,6 +2,7 @@ package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
+import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 import com.dragonguard.core.global.auth.AuthorizedMember
 import com.dragonguard.core.global.auth.AuthorizedMemberId
 import org.springframework.http.HttpStatus
@@ -33,4 +34,10 @@ class MemberController(
     fun getProfile(
         @AuthorizedMember member: Member,
     ): MemberProfileResponse = memberService.getProfile(member)
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("verify")
+    fun verify(
+        @AuthorizedMember member: Member,
+    ): MemberVerifyResponse = memberService.verify(member)
 }

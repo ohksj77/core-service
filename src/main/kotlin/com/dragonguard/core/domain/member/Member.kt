@@ -34,12 +34,8 @@ class Member(
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     var organization: Organization? = null
 
-    @CollectionTable
-    @ElementCollection
     @Enumerated(EnumType.STRING)
-    private val _authStep: MutableSet<AuthStep> = mutableSetOf()
-    val authStep: Set<AuthStep>
-        get() = _authStep.toSet()
+    var authStep: AuthStep = AuthStep.NONE
 
     @CollectionTable
     @ElementCollection(fetch = FetchType.EAGER)
@@ -71,8 +67,6 @@ class Member(
         _roles.add(role)
     }
 
-    fun getHighestAuthStep(): AuthStep = AuthStep.highestAuthStep(authStep)
-
     fun organize(organization: Organization) {
         this.organization = organization
     }
@@ -83,7 +77,7 @@ class Member(
             .map(::SimpleGrantedAuthority)
             .toList()
 
-    fun hasNoAuthStep(): Boolean = authStep.isEmpty()
+    fun hasNoAuthStep(): Boolean = authStep == AuthStep.NONE
 
     fun updateGithubToken(githubToken: String) {
         this.githubToken = githubToken
@@ -93,7 +87,7 @@ class Member(
         name: String,
         profileImage: String,
     ) {
-        _authStep.add(AuthStep.GITHUB)
+        this.authStep = AuthStep.GITHUB
         this.name = name
         this.profileImage = profileImage
     }
@@ -106,4 +100,6 @@ class Member(
     fun contributionNumOfType(type: ContributionType): Int = _contributions.numOfType(type)
 
     fun getTotalContribution(): Int = _contributions.total()
+
+    fun isLoginMember(): Boolean = authStep == AuthStep.EMAIL
 }
