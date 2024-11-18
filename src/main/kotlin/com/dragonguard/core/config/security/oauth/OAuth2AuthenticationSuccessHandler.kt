@@ -3,6 +3,7 @@ package com.dragonguard.core.config.security.oauth
 import com.dragonguard.core.config.security.jwt.JwtProvider
 import com.dragonguard.core.config.security.jwt.JwtToken
 import com.dragonguard.core.config.security.oauth.user.UserPrinciple
+import com.dragonguard.core.domain.member.MemberService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @Component
 class OAuth2AuthenticationSuccessHandler(
     private val jwtProvider: JwtProvider,
+    private val memberService: MemberService,
     @Value("\${app.oauth2.authorizedRedirectUri}") private val redirectUri: String,
 ) : SimpleUrlAuthenticationSuccessHandler() {
     override fun onAuthenticationSuccess(
@@ -28,8 +30,10 @@ class OAuth2AuthenticationSuccessHandler(
 
         val loginUser = authentication.principal as UserPrinciple
         val jwtToken: JwtToken = jwtProvider.createToken(loginUser)
-        val targetUri = determineTargetUrl(jwtToken)
 
+        memberService.updateContributions(loginUser.member)
+
+        val targetUri = determineTargetUrl(jwtToken)
         redirectStrategy.sendRedirect(request, response, targetUri)
     }
 
