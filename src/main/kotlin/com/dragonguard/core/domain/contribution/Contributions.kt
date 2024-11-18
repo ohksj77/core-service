@@ -5,7 +5,7 @@ import jakarta.persistence.OneToMany
 
 @Embeddable
 class Contributions {
-    @OneToMany(mappedBy = "contributions")
+    @OneToMany(mappedBy = "member")
     private val contributions: MutableList<Contribution> = mutableListOf()
 
     fun total(): Int = contributions.sumOf { it.amount }
@@ -14,5 +14,6 @@ class Contributions {
         this.contributions.addAll(contributions)
     }
 
-    fun numOfType(type: ContributionType): Int = contributions.filter { it.contributionType == type }.sumOf { it.amount }
+    fun numOfType(type: ContributionType): Int =
+        contributions.filter { it.contributionType == type }.sumOf { it.amount }
 }

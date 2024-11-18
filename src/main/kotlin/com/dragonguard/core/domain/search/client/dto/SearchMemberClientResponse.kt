@@ -19,7 +19,7 @@ data class SearchMemberClientResponse(
         )
 
         data class SearchMemberResponse(
-            val name: String,
+            val githubId: String,
             val isServiceMember: Boolean,
         )
     }

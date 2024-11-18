@@ -21,8 +21,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 class RedisConfig {
     @Bean
     fun redisConnectionFactory(
-        @Value("\$spring.data.redis.host") host: String,
-        @Value("\$spring.data.redis.port") port: Int,
+        @Value("\${spring.data.redis.host}") host: String,
+        @Value("\${spring.data.redis.port}") port: Int,
     ): RedisConnectionFactory = LettuceConnectionFactory(host, port)
 
     @Bean
