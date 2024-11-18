@@ -5,5 +5,6 @@ class EntityNotFoundException(
 ) : IllegalArgumentException(message) {
     companion object {
         fun member() = EntityNotFoundException("Member not found")
+        fun organization() = EntityNotFoundException("Organization not found")
     }
 }
