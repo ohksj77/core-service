@@ -9,7 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.UnsupportedJwtException
 import org.springframework.stereotype.Component
 import java.security.Key
-import java.util.Date
+import java.util.*
 
 @Component
 class JwtProvider(
@@ -56,6 +56,7 @@ class JwtProvider(
     private fun getClaims(userDetails: UserPrinciple): Claims {
         val claims = Jwts.claims()
         claims[USER_ID_CLAIM_NAME] = userDetails.name
+        claims[USER_ROLE_CLAIM_NAME] = userDetails.member.getHighestRole().name
         return claims
     }
 
@@ -81,5 +82,6 @@ class JwtProvider(
         private const val ACCESS_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 1000 // 1 Day
         private const val REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 14 * 1000 // 14 Days
         private const val USER_ID_CLAIM_NAME = "id"
+        private const val USER_ROLE_CLAIM_NAME = "role"
     }
 }

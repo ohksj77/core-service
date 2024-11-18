@@ -26,4 +26,8 @@ class Organization(
 
     @Enumerated(EnumType.STRING)
     var organizationStatus: OrganizationStatus = OrganizationStatus.REQUESTED
+
+    fun approve() {
+        this.organizationStatus = OrganizationStatus.APPROVED
+    }
 }

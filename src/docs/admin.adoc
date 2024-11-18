@@ -1,0 +1,19 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Admin
+
+=== 관리자 권한 확인
+
+operation::check admin[snippets='http-request,http-response,request-headers']
+
+=== 조직 상태 변경
+
+operation::post admin decide[snippets='http-request,http-response,request-headers,path-parameters,request-fields,response-fields']
+
+=== 상태별 조직 조회
+
+operation::get admin organization[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
