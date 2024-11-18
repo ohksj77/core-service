@@ -17,3 +17,11 @@ operation::get member contributions[snippets='http-request,http-response']
 === 회원 프로필 조회 (메인 화면)
 
 operation::get member profile[snippets='http-request,http-response']
+
+=== 회원 인증 완료 여부 조회
+
+operation::get verify member[snippets='http-request,http-response']
+
+=== 회원 탈퇴
+
+operation::delete member[snippets='http-request,http-response']

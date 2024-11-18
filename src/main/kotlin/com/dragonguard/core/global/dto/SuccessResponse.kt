@@ -1,10 +1,11 @@
 package com.dragonguard.core.global.dto
 
 class SuccessResponse<T> private constructor(
-    val status: String,
+    val code: Int,
+    val message: String,
     val data: T,
 ) {
-    constructor(data: T) : this(SUCCESS, data)
+    constructor(code: Int, data: T) : this(code, SUCCESS, data)
 
     companion object {
         private const val SUCCESS = "success"

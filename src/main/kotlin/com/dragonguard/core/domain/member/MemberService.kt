@@ -3,6 +3,7 @@ package com.dragonguard.core.domain.member
 import com.dragonguard.core.domain.contribution.ContributionFacade
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
+import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
 import com.dragonguard.core.domain.search.dto.ServiceMembers
 import com.dragonguard.core.global.exception.EntityNotFoundException
@@ -44,7 +45,8 @@ class MemberService(
         return member
     }
 
-    private fun getEntityByGithubId(githubId: String) = memberRepository.findByGithubId(githubId) ?: throw EntityNotFoundException.member()
+    private fun getEntityByGithubId(githubId: String) =
+        memberRepository.findByGithubId(githubId) ?: throw EntityNotFoundException.member()
 
     fun getEntity(id: Long): Member = memberRepository.findByIdOrNull(id) ?: throw EntityNotFoundException.member()
 
@@ -52,7 +54,8 @@ class MemberService(
         contributionFacade.updateContributions(member)
     }
 
-    fun getContributions(memberId: Long): List<ContributionResponse> = contributionFacade.getMemberContributions(memberId)
+    fun getContributions(memberId: Long): List<ContributionResponse> =
+        contributionFacade.getMemberContributions(memberId)
 
     fun getProfile(member: Member): MemberProfileResponse {
         val memberProfileRank = contributionFacade.getMemberProfileRank(member)
@@ -65,4 +68,8 @@ class MemberService(
                 memberRepository.existsByGithubId(it.login)
             }.map { it.login }
             .let { ServiceMembers(it) }
+
+    fun verify(member: Member): MemberVerifyResponse = MemberVerifyResponse(member.isLoginMember())
+
+    fun delete(memberId: Long) = memberRepository.deleteById(memberId)
 }
