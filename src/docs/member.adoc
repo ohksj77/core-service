@@ -25,3 +25,11 @@ operation::get verify member[snippets='http-request,http-response']
 === 회원 탈퇴
 
 operation::delete member[snippets='http-request,http-response']
+
+=== 회원 개인 상세 조회
+
+operation::get member details me[snippets='http-request,http-response']
+
+=== 타회원 상세 조회
+
+operation::get member details[snippets='http-request,http-response']

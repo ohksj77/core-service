@@ -3,6 +3,7 @@ package com.dragonguard.core.support.fixture
 import com.dragonguard.core.domain.member.AuthStep
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.member.Tier
+import com.dragonguard.core.domain.member.dto.MemberDetailsResponse
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
 import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 
@@ -30,5 +31,15 @@ class MemberFactory {
             )
 
         fun createVerifyResponse(): MemberVerifyResponse = MemberVerifyResponse(true)
+        fun createDetailsResponse(): MemberDetailsResponse = MemberDetailsResponse(
+            100,
+            200,
+            300,
+            400,
+            "test-profileImage",
+            listOf("test-repo-1", "test-repo-2"),
+            "test-organization",
+            1
+        )
     }
 }

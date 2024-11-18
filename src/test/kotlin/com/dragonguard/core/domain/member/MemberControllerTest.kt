@@ -187,4 +187,66 @@ class MemberControllerTest : RestDocsTest() {
                 ),
             )
     }
+
+    @Test
+    fun `회원 개인 상세 조회`() {
+        // given
+        val expected = MemberFactory.createDetailsResponse()
+        BDDMockito.given(memberService.getDetailsById(any(Long::class.java))).willReturn(expected)
+
+        // when
+        val perform: ResultActions =
+            mockMvc.perform(
+                RestDocumentationRequestBuilders
+                    .get("/members/details/me")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
+            )
+
+        // then
+        perform
+            .andExpect(MockMvcResultMatchers.status().isOk())
+
+        // docs
+        perform
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "get member details me",
+                    RestDocsUtils.getDocumentRequest(),
+                    RestDocsUtils.getDocumentResponse(),
+                ),
+            )
+    }
+
+    @Test
+    fun `타회원 상세 조회`() {
+        // given
+        val expected = MemberFactory.createDetailsResponse()
+        BDDMockito.given(memberService.getDetailsByGithubId(any(String::class.java))).willReturn(expected)
+
+        // when
+        val perform: ResultActions =
+            mockMvc.perform(
+                RestDocumentationRequestBuilders
+                    .get("/members/details?githubId=ohksj77")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
+            )
+
+        // then
+        perform
+            .andExpect(MockMvcResultMatchers.status().isOk())
+
+        // docs
+        perform
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "get member details",
+                    RestDocsUtils.getDocumentRequest(),
+                    RestDocsUtils.getDocumentResponse(),
+                ),
+            )
+    }
 }
