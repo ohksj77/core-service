@@ -118,6 +118,9 @@ class RankRedisService(
             throw RankAccessException.get(e)
         }
 
+    override fun getMemberRank(member: Member): Int =
+        getMemberRank(member)
+
     private fun calculateAdjacentRanks(
         it: Long,
         totalMemberNum: Long,
