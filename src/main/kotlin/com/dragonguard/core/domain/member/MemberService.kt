@@ -70,4 +70,6 @@ class MemberService(
             .let { ServiceMembers(it) }
 
     fun verify(member: Member): MemberVerifyResponse = MemberVerifyResponse(member.isLoginMember())
+
+    fun delete(memberId: Long) = memberRepository.deleteById(memberId)
 }
