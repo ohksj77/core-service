@@ -10,7 +10,7 @@ class Email(
     @Column(nullable = false)
     var organizationId: Long,
     @Column(nullable = false)
-    var memberId: Long,
+    var email: String,
 ) : BaseEntity() {
 
     var code: Int = ThreadLocalRandom.current().nextInt(MIN, MAX)

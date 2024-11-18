@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -82,6 +84,13 @@ class MemberControllerTest : RestDocsTest() {
                     "get member contributions",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data[].contribute_type").description("기여도 타입"),
+                        fieldWithPath("data[].amount").description("기여도 개수"),
+                        fieldWithPath("data[].created_at").description("기여도 db 생성 시점"),
+                    )
                 ),
             )
     }
@@ -118,6 +127,25 @@ class MemberControllerTest : RestDocsTest() {
                     "get member profile",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.github_id").description("깃허브 id"),
+                        fieldWithPath("data.name").description("회원명"),
+                        fieldWithPath("data.commits").description("커밋 개수"),
+                        fieldWithPath("data.issues").description("이슈 개수"),
+                        fieldWithPath("data.pull_requests").description("풀리퀘스트 개수"),
+                        fieldWithPath("data.code_reviews").description("코드리뷰 개수"),
+                        fieldWithPath("data.tier").description("깃랭크 티어"),
+                        fieldWithPath("data.auth_step").description("인증 단계"),
+                        fieldWithPath("data.profile_image").description("프로필 이미지"),
+                        fieldWithPath("data.rank").description("전체 회원 랭크"),
+                        fieldWithPath("data.contribution_amount").description("기여도 개수"),
+                        fieldWithPath("data.organization").description("조직명"),
+                        fieldWithPath("data.organization_rank").description("조직 내 랭크"),
+                        fieldWithPath("data.is_last").description("조직 내 마지막 랭크 여부"),
+                        fieldWithPath("data.member_github_ids").description("인접한 랭크 회원 깃허브 id"),
+                    )
                 ),
             )
     }
@@ -154,6 +182,11 @@ class MemberControllerTest : RestDocsTest() {
                     "get verify member",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.is_login_member").description("조직 이메일 인증 완료 여부"),
+                    )
                 ),
             )
     }
@@ -215,6 +248,18 @@ class MemberControllerTest : RestDocsTest() {
                     "get member details me",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.commits").description("커밋 개수"),
+                        fieldWithPath("data.issues").description("이슈 개수"),
+                        fieldWithPath("data.pull_requests").description("풀리퀘스트 개수"),
+                        fieldWithPath("data.code_reviews").description("코드리뷰 개수"),
+                        fieldWithPath("data.profile_image").description("프로필 이미지"),
+                        fieldWithPath("data.git_repos[]").description("깃허브 저장소명 목록"),
+                        fieldWithPath("data.organization").description("조직명"),
+                        fieldWithPath("data.rank").description("전체 회원 랭크"),
+                    )
                 ),
             )
     }
@@ -246,6 +291,18 @@ class MemberControllerTest : RestDocsTest() {
                     "get member details",
                     RestDocsUtils.getDocumentRequest(),
                     RestDocsUtils.getDocumentResponse(),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data.commits").description("커밋 개수"),
+                        fieldWithPath("data.issues").description("이슈 개수"),
+                        fieldWithPath("data.pull_requests").description("풀리퀘스트 개수"),
+                        fieldWithPath("data.code_reviews").description("코드리뷰 개수"),
+                        fieldWithPath("data.profile_image").description("프로필 이미지"),
+                        fieldWithPath("data.git_repos[]").description("깃허브 저장소명 목록"),
+                        fieldWithPath("data.organization").description("조직명"),
+                        fieldWithPath("data.rank").description("전체 회원 랭크"),
+                    )
                 ),
             )
     }

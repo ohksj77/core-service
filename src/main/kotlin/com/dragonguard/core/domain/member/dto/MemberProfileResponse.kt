@@ -9,7 +9,7 @@ data class MemberProfileResponse(
     val commits: Int,
     val issues: Int,
     val pullRequests: Int,
-    val reviews: Int,
+    val codeReviews: Int,
     val tier: Tier,
     val authStep: AuthStep,
     val profileImage: String,

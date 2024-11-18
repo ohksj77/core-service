@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.test.web.servlet.ResultActions
@@ -63,6 +65,12 @@ class SearchControllerTest : RestDocsTest() {
                         parameterWithName("q").description("검색어"),
                         parameterWithName("page").description("페이징에 사용될 페이지 (최소 1)"),
                     ),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data[].github_id").description("깃허브 id"),
+                        fieldWithPath("data[].is_service_member").description("깃랭크 서비스 회원 여부")
+                    )
                 ),
             )
     }
@@ -113,6 +121,14 @@ class SearchControllerTest : RestDocsTest() {
                         parameterWithName("page").description("페이징에 사용될 페이지 (최소 1)"),
                         parameterWithName("filters").description("검색 필터 (nullable)"),
                     ),
+                    responseFields(
+                        fieldWithPath("code").description("http 상태 코드"),
+                        fieldWithPath("message").description("성공 메시지"),
+                        fieldWithPath("data[].full_name").description("깃허브 Repository 이름"),
+                        fieldWithPath("data[].language").description("빈도 높은 언어"),
+                        fieldWithPath("data[].description").description("설명"),
+                        fieldWithPath("data[].created_at").description("생성 시점"),
+                    )
                 ),
             )
     }

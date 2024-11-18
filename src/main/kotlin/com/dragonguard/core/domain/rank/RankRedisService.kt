@@ -6,13 +6,11 @@ import com.dragonguard.core.domain.rank.dto.MemberRank
 import com.dragonguard.core.domain.rank.dto.ProfileRank
 import com.dragonguard.core.domain.rank.exception.RankAccessException
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.stereotype.Service
 
 @Service
 class RankRedisService(
-    private val redisTemplate: RedisTemplate<Any, Any>,
-    private val mappingJackson2HttpMessageConverter: MappingJackson2HttpMessageConverter,
+    private val redisTemplate: RedisTemplate<String, String>,
 ) : RankService {
     override fun addContribution(
         member: Member,
