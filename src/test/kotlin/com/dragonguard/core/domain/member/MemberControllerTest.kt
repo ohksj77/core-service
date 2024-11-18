@@ -157,4 +157,34 @@ class MemberControllerTest : RestDocsTest() {
                 ),
             )
     }
+
+    @Test
+    fun `회원 탈퇴`() {
+        // given
+        BDDMockito.willDoNothing().given(memberService).delete(any(Long::class.java))
+
+        // when
+        val perform: ResultActions =
+            mockMvc.perform(
+                RestDocumentationRequestBuilders
+                    .delete("/members")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
+            )
+
+        // then
+        perform
+            .andExpect(MockMvcResultMatchers.status().isNoContent())
+
+        // docs
+        perform
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "delete member",
+                    RestDocsUtils.getDocumentRequest(),
+                    RestDocsUtils.getDocumentResponse(),
+                ),
+            )
+    }
 }
