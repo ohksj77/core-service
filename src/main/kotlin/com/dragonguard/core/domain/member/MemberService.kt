@@ -2,6 +2,8 @@ package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.contribution.ContributionFacade
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
+import com.dragonguard.core.domain.gitrepo.GitRepoService
+import com.dragonguard.core.domain.member.dto.MemberDetailsResponse
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
 import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
@@ -17,6 +19,7 @@ class MemberService(
     private val memberRepository: MemberRepository,
     private val memberMapper: MemberMapper,
     private val contributionFacade: ContributionFacade,
+    private val gitRepoService: GitRepoService,
 ) {
     @Transactional
     fun joinIfNone(
@@ -72,4 +75,20 @@ class MemberService(
     fun verify(member: Member): MemberVerifyResponse = MemberVerifyResponse(member.isLoginMember())
 
     fun delete(memberId: Long) = memberRepository.deleteById(memberId)
+
+    fun getDetailsById(memberId: Long): MemberDetailsResponse {
+        val member: Member =
+            memberRepository.findByIdWithContributions(memberId) ?: throw EntityNotFoundException.member()
+        val gitRepos: List<String> = gitRepoService.getNamesByMemberId(memberId)
+        val rank: Int = contributionFacade.getMemberRank(member)
+        return memberMapper.toDetailsResponse(member, gitRepos, rank)
+    }
+
+    fun getDetailsByGithubId(githubId: String): MemberDetailsResponse {
+        val member: Member =
+            memberRepository.findByGithubIdWithContributions(githubId) ?: throw EntityNotFoundException.member()
+        val gitRepos: List<String> = gitRepoService.getNamesByMemberId(member.id!!)
+        val rank: Int = contributionFacade.getMemberRank(member)
+        return memberMapper.toDetailsResponse(member, gitRepos, rank)
+    }
 }

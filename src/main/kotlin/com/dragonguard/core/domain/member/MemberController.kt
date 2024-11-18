@@ -1,6 +1,7 @@
 package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
+import com.dragonguard.core.domain.member.dto.MemberDetailsResponse
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
 import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 import com.dragonguard.core.global.auth.AuthorizedMember
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
@@ -47,4 +49,16 @@ class MemberController(
     fun delete(
         @AuthorizedMemberId memberId: Long,
     ) = memberService.delete(memberId)
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("details/me")
+    fun getDetails(
+        @AuthorizedMemberId memberId: Long,
+    ): MemberDetailsResponse = memberService.getDetailsById(memberId)
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("details")
+    fun getDetails(
+        @RequestParam githubId: String,
+    ): MemberDetailsResponse = memberService.getDetailsByGithubId(githubId)
 }

@@ -26,7 +26,10 @@ class ContributionFacade(
         contributionService.saveContribution(contributionClientResult, member, year)
     }
 
-    fun getMemberContributions(memberId: Long): List<ContributionResponse> = contributionService.getMemberContributions(memberId)
+    fun getMemberContributions(memberId: Long): List<ContributionResponse> =
+        contributionService.getMemberContributions(memberId)
 
     fun getMemberProfileRank(member: Member): ProfileRank = rankService.getMemberProfileRank(member)
+
+    fun getMemberRank(member: Member): Int = rankService.getMemberRank(member)
 }

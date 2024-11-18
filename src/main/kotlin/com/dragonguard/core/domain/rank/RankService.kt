@@ -29,4 +29,6 @@ interface RankService {
     ): List<MemberRank>
 
     fun getMemberProfileRank(member: Member): ProfileRank
+
+    fun getMemberRank(member: Member): Int
 }
