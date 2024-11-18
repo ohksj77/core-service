@@ -121,4 +121,40 @@ class MemberControllerTest : RestDocsTest() {
                 ),
             )
     }
+
+    @Test
+    fun `회원 인증 여부 조회`() {
+        // given
+        val expected = MemberFactory.createVerifyResponse()
+
+        BDDMockito
+            .given(
+                memberService
+                    .verify(any(Member::class.java)),
+            ).willReturn(expected)
+
+        // when
+        val perform: ResultActions =
+            mockMvc.perform(
+                RestDocumentationRequestBuilders
+                    .get("/members/verify")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
+            )
+
+        // then
+        perform
+            .andExpect(MockMvcResultMatchers.status().isOk())
+
+        // docs
+        perform
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "get verify member",
+                    RestDocsUtils.getDocumentRequest(),
+                    RestDocsUtils.getDocumentResponse(),
+                ),
+            )
+    }
 }

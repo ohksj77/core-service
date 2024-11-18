@@ -4,6 +4,7 @@ import com.dragonguard.core.domain.member.AuthStep
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.member.Tier
 import com.dragonguard.core.domain.member.dto.MemberProfileResponse
+import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 
 class MemberFactory {
     companion object {
@@ -27,5 +28,7 @@ class MemberFactory {
                 false,
                 listOf("test-1", "test-2", "test-3"),
             )
+
+        fun createVerifyResponse(): MemberVerifyResponse = MemberVerifyResponse(true)
     }
 }
