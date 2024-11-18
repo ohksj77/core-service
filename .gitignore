@@ -43,3 +43,4 @@ out/
 application-env.yml
 .env
 data/
+*.html
