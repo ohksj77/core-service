@@ -9,3 +9,11 @@
 === 이메일 재전송
 
 operation::resend email[snippets='http-request,http-response,request-headers,path-parameters']
+
+=== 이메일 코드 확인
+
+operation::check email[snippets='http-request,http-response,request-headers,path-parameters,query-parameters,response-fields']
+
+=== 이메일 코드 제거
+
+operation::delete email[snippets='http-request,http-response,request-headers,path-parameters']
