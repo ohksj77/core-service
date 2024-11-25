@@ -24,7 +24,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 @Entity
 @SoftDelete
 class Member(
-    var name: String,
     @NaturalId
     @Column(nullable = false, unique = true)
     var githubId: String,
@@ -85,11 +84,9 @@ class Member(
     }
 
     fun join(
-        name: String,
         profileImage: String,
     ) {
         this.authStep = AuthStep.GITHUB
-        this.name = name
         this.profileImage = profileImage
     }
 

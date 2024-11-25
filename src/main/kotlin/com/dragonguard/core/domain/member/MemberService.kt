@@ -25,14 +25,12 @@ class MemberService(
     @Transactional
     fun joinIfNone(
         githubId: String,
-        name: String,
         profileImage: String,
         userRequest: OAuth2UserRequest,
     ): Member {
         if (!memberRepository.existsByGithubId(githubId)) {
             memberRepository.save(
                 memberMapper.toEntity(
-                    name,
                     githubId,
                     profileImage,
                 ),
@@ -43,7 +41,7 @@ class MemberService(
             getEntityByGithubId(githubId)
 
         if (member.hasNoAuthStep()) {
-            member.join(name, profileImage)
+            member.join(profileImage)
         }
         member.updateGithubToken(userRequest.accessToken.tokenValue)
         return member

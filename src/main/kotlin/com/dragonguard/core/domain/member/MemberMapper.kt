@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component
 @Component
 class MemberMapper {
     fun toEntity(
-        name: String,
         githubId: String,
         profileImage: String,
     ) = Member(
-        name,
         githubId,
         profileImage,
     )
@@ -23,7 +21,6 @@ class MemberMapper {
         profileRank: ProfileRank,
     ): MemberProfileResponse =
         MemberProfileResponse(
-            member.name,
             member.githubId,
             member.contributionNumOfType(ContributionType.COMMIT),
             member.contributionNumOfType(ContributionType.ISSUE),

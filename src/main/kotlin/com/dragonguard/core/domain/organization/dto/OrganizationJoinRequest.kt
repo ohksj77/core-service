@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull
 
 data class OrganizationJoinRequest(
     @field:NotNull
-    val organizationId: Long,
+    val organizationId: Long?,
     @field:Email
-    val email: String
+    val email: String?
 )

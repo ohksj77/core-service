@@ -8,6 +8,8 @@ import com.dragonguard.core.domain.contribution.client.dto.ContributionClientReq
 import com.dragonguard.core.domain.contribution.client.dto.ContributionClientResponse
 import com.dragonguard.core.domain.contribution.dto.ContributionClientResult
 import com.dragonguard.core.domain.contribution.dto.ContributionRequest
+import com.dragonguard.core.global.exception.RestClientException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -21,6 +23,7 @@ class ContributionClientService(
     private val issueClient: IssueClient,
     private val pullRequestClient: PullRequestClient,
 ) {
+    private val logger = LoggerFactory.getLogger(ContributionClientService::class.java)
     private val executor: ExecutorService = Executors.newVirtualThreadPerTaskExecutor()
 
     fun getContributions(contributionRequest: ContributionRequest, year: Int): ContributionClientResult {
@@ -47,6 +50,9 @@ class ContributionClientService(
     private fun getPullRequestContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             pullRequestClient.request(request)
+        } catch (e: RestClientException) {
+            logger.error("Failed to get pull request contribution", e)
+            throw e
         } catch (e: Exception) {
             DEFAULT_RESPONSE
         }
@@ -54,6 +60,9 @@ class ContributionClientService(
     private fun getIssueContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             issueClient.request(request)
+        } catch (e: RestClientException) {
+            logger.error("Failed to get issue contribution", e)
+            throw e
         } catch (e: Exception) {
             DEFAULT_RESPONSE
         }
@@ -61,6 +70,9 @@ class ContributionClientService(
     private fun getCodeReviewContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             codeReviewClient.request(request)
+        } catch (e: RestClientException) {
+            logger.error("Failed to get code review contribution", e)
+            throw e
         } catch (e: Exception) {
             DEFAULT_RESPONSE
         }
@@ -68,6 +80,9 @@ class ContributionClientService(
     private fun getCommitContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             commitClient.request(request)
+        } catch (e: RestClientException) {
+            logger.error("Failed to get commit contribution", e)
+            throw e
         } catch (e: Exception) {
             DEFAULT_RESPONSE
         }

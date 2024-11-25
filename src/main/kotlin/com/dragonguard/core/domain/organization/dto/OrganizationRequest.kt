@@ -7,9 +7,9 @@ import org.hibernate.validator.constraints.Length
 
 data class OrganizationRequest(
     @field:Length(min = 2)
-    val name: String,
+    val name: String?,
     @field:NotBlank
-    val emailEndPoint: String,
+    val emailEndPoint: String?,
     @field:NotNull
-    val organizationType: OrganizationType,
+    val organizationType: OrganizationType?,
 )
