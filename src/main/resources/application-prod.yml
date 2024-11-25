@@ -22,3 +22,8 @@ spring:
     encoding: UTF-8
     baseline-on-migrate: true
     baseline-version: 0
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
