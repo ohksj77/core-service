@@ -18,9 +18,9 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     fun existsByGithubId(githubId: String): Boolean
 
-    @Query("SELECT m FROM Member m JOIN FETCH m._contributions.contributions WHERE m.id = :id")
+    @Query("SELECT m FROM Member m JOIN FETCH m.contributions.contributions WHERE m.id = :id")
     fun findByIdWithContributions(id: Long): Member?
 
-    @Query("SELECT m FROM Member m JOIN FETCH m._contributions.contributions WHERE m.githubId = :githubId")
+    @Query("SELECT m FROM Member m JOIN FETCH m.contributions.contributions WHERE m.githubId = :githubId")
     fun findByGithubIdWithContributions(githubId: String): Member?
 }
