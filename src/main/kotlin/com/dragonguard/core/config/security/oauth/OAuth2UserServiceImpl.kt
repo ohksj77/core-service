@@ -22,6 +22,7 @@ class OAuth2UserServiceImpl(
 
         val user: Member =
             memberService.joinIfNone(githubId, name, profileImage, userRequest)
+        memberService.updateContributions(user)
         return userPrincipleMapper.mapToLoginUser(user)
     }
 }

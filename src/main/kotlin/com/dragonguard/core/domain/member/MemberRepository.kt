@@ -1,9 +1,9 @@
 package com.dragonguard.core.domain.member
 
-import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.transaction.annotation.Transactional
 
 interface MemberRepository : JpaRepository<Member, Long> {
     fun findByGithubId(githubId: String): Member?
