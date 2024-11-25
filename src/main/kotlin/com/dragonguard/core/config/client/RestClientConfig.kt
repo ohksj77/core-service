@@ -19,7 +19,6 @@ class RestClientConfig(
 ) {
     companion object {
         private const val GITHUB_API_MIME_TYPE = "application/vnd.github+json"
-        private const val USER_AGENT = "request"
         private const val REQUEST_TIMEOUT_DURATION = 20L
     }
 
@@ -28,12 +27,13 @@ class RestClientConfig(
         @Value("\${github.url}") url: String,
         @Value("\${github.version-key}") versionKey: String,
         @Value("\${github.version-value}") versionValue: String,
+        @Value("\${github.user-agent}") userAgent: String,
     ): RestClient =
         RestClient
             .builder()
             .baseUrl(url)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
-            .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
+            .defaultHeader(HttpHeaders.USER_AGENT, userAgent)
             .defaultHeader(versionKey, versionValue)
             .requestFactory(getClientHttpRequestFactory())
             .messageConverters { converters ->
