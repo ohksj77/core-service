@@ -7,11 +7,13 @@ import com.dragonguard.core.domain.contribution.client.PullRequestClient
 import com.dragonguard.core.domain.contribution.client.dto.ContributionClientRequest
 import com.dragonguard.core.domain.contribution.client.dto.ContributionClientResponse
 import com.dragonguard.core.domain.contribution.dto.ContributionClientResult
-import com.dragonguard.core.domain.member.Member
-import org.springframework.beans.factory.annotation.Qualifier
+import com.dragonguard.core.domain.contribution.dto.ContributionRequest
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Future
+import java.util.concurrent.Executors
+
 
 @Service
 class ContributionClientService(
@@ -19,64 +21,60 @@ class ContributionClientService(
     private val commitClient: CommitClient,
     private val issueClient: IssueClient,
     private val pullRequestClient: PullRequestClient,
-    @Qualifier("virtualThreadExecutor") private val executorService: ExecutorService,
 ) {
-    companion object {
-        private const val DEFAULT_CONTRIBUTION = 0
+    private val logger = LoggerFactory.getLogger(ContributionClientService::class.java)
+    private val executor: ExecutorService = Executors.newVirtualThreadPerTaskExecutor()
+
+    fun getContributions(contributionRequest: ContributionRequest, year: Int): ContributionClientResult {
+        val request = ContributionClientRequest(contributionRequest.githubId, contributionRequest.githubToken, year)
+
+        val pullRequestFuture =
+            CompletableFuture.supplyAsync({ getPullRequestContribution(request).total_count }, executor)
+        val issueFuture = CompletableFuture.supplyAsync({ getIssueContribution(request).total_count }, executor)
+        val codeReviewFuture =
+            CompletableFuture.supplyAsync({ getCodeReviewContribution(request).total_count }, executor)
+        val commitFuture = CompletableFuture.supplyAsync({ getCommitContribution(request).total_count }, executor)
+
+        val allOf = CompletableFuture.allOf(pullRequestFuture, issueFuture, codeReviewFuture, commitFuture)
+        allOf.join()
+
+        return ContributionClientResult(
+            commitFuture.get(),
+            pullRequestFuture.get(),
+            issueFuture.get(),
+            codeReviewFuture.get()
+        )
     }
-
-    fun getContributions(
-        member: Member,
-        year: Int,
-    ): ContributionClientResult =
-        executorService.use {
-            val request = ContributionClientRequest(member.githubId, member.githubToken!!, year)
-
-            val pullRequest = it.submit { getPullRequestContribution(request) }
-            val issue = it.submit { getIssueContribution(request) }
-            val codeReview = it.submit { getCodeReviewContribution(request) }
-            val commit = it.submit { getCommitContribution(request) }
-
-            ContributionClientResult(
-                commit.getOrElse(),
-                pullRequest.getOrElse(),
-                issue.getOrElse(),
-                codeReview.getOrElse(),
-            )
-        }
-
-    private fun Future<*>.getOrElse(): Int =
-        try {
-            this.get() as Int
-        } catch (e: Exception) {
-            DEFAULT_CONTRIBUTION
-        }
 
     private fun getPullRequestContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             pullRequestClient.request(request)
         } catch (e: Exception) {
-            ContributionClientResponse(0)
+            logger.error("Failed to get pull request contribution", e)
+            throw e
         }
 
     private fun getIssueContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             issueClient.request(request)
         } catch (e: Exception) {
-            ContributionClientResponse(0)
+            logger.error("Failed to get issue contribution", e)
+            throw e
         }
 
     private fun getCodeReviewContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             codeReviewClient.request(request)
         } catch (e: Exception) {
-            ContributionClientResponse(0)
+            logger.error("Failed to get code review contribution", e)
+            throw e
         }
 
     private fun getCommitContribution(request: ContributionClientRequest): ContributionClientResponse =
         try {
             commitClient.request(request)
         } catch (e: Exception) {
-            ContributionClientResponse(0)
+            logger.error("Failed to get commit contribution", e)
+            throw e
         }
 }

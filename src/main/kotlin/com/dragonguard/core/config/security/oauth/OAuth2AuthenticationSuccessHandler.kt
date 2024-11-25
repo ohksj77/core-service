@@ -31,8 +31,6 @@ class OAuth2AuthenticationSuccessHandler(
         val loginUser = authentication.principal as UserPrinciple
         val jwtToken: JwtToken = jwtProvider.createToken(loginUser)
 
-        memberService.updateContributions(loginUser.member)
-
         val targetUri = determineTargetUrl(jwtToken)
         redirectStrategy.sendRedirect(request, response, targetUri)
     }

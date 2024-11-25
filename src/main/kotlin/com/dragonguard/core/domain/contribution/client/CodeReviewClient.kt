@@ -12,7 +12,7 @@ class CodeReviewClient(
     private val restClient: RestClient,
 ) {
     companion object {
-        private const val PATH = "search/issues?q=reviewed-by:%s+type:pr+created:%d-01-01..%s"
+        private const val PATH = "search/issues?q=reviewed-by:%s+type:pr+created:%d-01-01..%d-12-31"
     }
 
     fun request(request: ContributionClientRequest): ContributionClientResponse =

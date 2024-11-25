@@ -24,7 +24,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 @Entity
 @SoftDelete
 class Member(
-    var name: String,
     @NaturalId
     @Column(nullable = false, unique = true)
     var githubId: String,
@@ -48,9 +47,8 @@ class Member(
     var tier: Tier = Tier.SPROUT
 
     @Embedded
-    private val _contributions: Contributions = Contributions()
-    val contributions: Contributions
-        get() = _contributions
+    var contributions: Contributions = Contributions()
+        protected set
 
     var refreshToken: String? = null
     var githubToken: String? = null
@@ -58,7 +56,7 @@ class Member(
     var email: String? = null
 
     fun updateTier() {
-        _contributions.let {
+        this.contributions.let {
             tier = Tier.fromPoint(it.total())
         }
     }
@@ -86,22 +84,20 @@ class Member(
     }
 
     fun join(
-        name: String,
         profileImage: String,
     ) {
         this.authStep = AuthStep.GITHUB
-        this.name = name
         this.profileImage = profileImage
     }
 
     fun addContribution(contributions: List<Contribution>) {
-        this._contributions.addAll(contributions)
+        this.contributions.addAll(contributions)
         updateTier()
     }
 
-    fun contributionNumOfType(type: ContributionType): Int = _contributions.numOfType(type)
+    fun contributionNumOfType(type: ContributionType): Int = this.contributions.numOfType(type)
 
-    fun getTotalContribution(): Int = _contributions.total()
+    fun getTotalContribution(): Int = this.contributions.total()
 
     fun isLoginMember(): Boolean = authStep == AuthStep.EMAIL
 }

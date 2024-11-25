@@ -1,5 +1,6 @@
 package com.dragonguard.core.domain.rank
 
+import com.dragonguard.core.domain.contribution.dto.ContributionRequest
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.organization.OrganizationType
 import com.dragonguard.core.domain.rank.dto.MemberRank
@@ -7,7 +8,7 @@ import com.dragonguard.core.domain.rank.dto.ProfileRank
 
 interface RankService {
     fun addContribution(
-        member: Member,
+        contributionRequest: ContributionRequest,
         totalAmount: Int,
     )
 

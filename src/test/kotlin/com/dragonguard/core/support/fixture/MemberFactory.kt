@@ -9,11 +9,10 @@ import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 
 class MemberFactory {
     companion object {
-        fun createEntity(): Member = Member("test-name", "test-githubId", "test-profileImage")
+        fun createEntity(): Member = Member("test-githubId", "test-profileImage")
 
         fun createProfileResponse(): MemberProfileResponse =
             MemberProfileResponse(
-                "test-name",
                 "test-githubId",
                 100,
                 200,

@@ -17,9 +17,9 @@ class OrganizationService(
 ) {
     fun create(organizationRequest: OrganizationRequest): IdResponse {
         val organization = Organization(
-            organizationRequest.name,
-            organizationRequest.emailEndPoint,
-            organizationRequest.organizationType
+            organizationRequest.name!!,
+            organizationRequest.emailEndPoint!!,
+            organizationRequest.organizationType!!
         )
         val id = organizationRepository.save(organization).id
         return IdResponse(id)
@@ -27,8 +27,8 @@ class OrganizationService(
 
     @Transactional
     fun join(member: Member, request: OrganizationJoinRequest): IdResponse {
-        val organization = getEntity(request.organizationId)
-        organization.validateAndUpdateEmail(member, request.email)
+        val organization = getEntity(request.organizationId!!)
+        organization.validateAndUpdateEmail(member, request.email!!)
         val emailCodeId = emailService.send(organization.id!!, member)
         return IdResponse(emailCodeId)
     }

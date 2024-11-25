@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotNull
 
 data class AdminDecideRequest(
     @field:NotNull
-    val organizationStatus: OrganizationStatus,
+    val organizationStatus: OrganizationStatus?,
 )

@@ -1,19 +1,25 @@
 package com.dragonguard.core.config.async
 
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.task.AsyncTaskExecutor
-import org.springframework.core.task.support.TaskExecutorAdapter
-import org.springframework.scheduling.annotation.AsyncConfigurer
-import org.springframework.scheduling.annotation.EnableAsync
-import java.util.concurrent.ExecutorService
+import org.springframework.core.task.TaskExecutor
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import java.util.concurrent.Executors
 
-@EnableAsync
+
 @Configuration
-class AsyncConfig : AsyncConfigurer {
-    @Bean
-    fun virtualAsyncTaskExecutor(
-        @Qualifier("virtualThreadExecutor") virtualThreadExecutor: ExecutorService,
-    ): AsyncTaskExecutor = TaskExecutorAdapter(virtualThreadExecutor)
+class AsyncConfig {
+    @Bean(name = ["virtualAsyncTaskExecutor"])
+    fun virtualAsyncTaskExecutor(): TaskExecutor {
+        val executor = ThreadPoolTaskExecutor()
+        executor.setTaskDecorator { runnable: Runnable ->
+            Runnable {
+                Executors.newVirtualThreadPerTaskExecutor().use { scope ->
+                    scope.submit(runnable)
+                }
+            }
+        }
+        executor.initialize()
+        return executor
+    }
 }

@@ -12,7 +12,7 @@ class CommitClient(
     private val restClient: RestClient,
 ) {
     companion object {
-        private const val PATH = "search/commits?q=author:%s+committer-date:%%3E%d-01-01"
+        private const val PATH = "search/commits?q=author:%s+committer-date:%d-01-01..%s-12-31"
     }
 
     fun request(request: ContributionClientRequest): ContributionClientResponse =

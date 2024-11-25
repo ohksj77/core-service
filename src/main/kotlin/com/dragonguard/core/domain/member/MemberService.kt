@@ -1,6 +1,7 @@
 package com.dragonguard.core.domain.member
 
 import com.dragonguard.core.domain.contribution.ContributionFacade
+import com.dragonguard.core.domain.contribution.dto.ContributionRequest
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.gitrepo.GitRepoService
 import com.dragonguard.core.domain.member.dto.MemberDetailsResponse
@@ -9,10 +10,10 @@ import com.dragonguard.core.domain.member.dto.MemberVerifyResponse
 import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
 import com.dragonguard.core.domain.search.dto.ServiceMembers
 import com.dragonguard.core.global.exception.EntityNotFoundException
-import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MemberService(
@@ -24,14 +25,12 @@ class MemberService(
     @Transactional
     fun joinIfNone(
         githubId: String,
-        name: String,
         profileImage: String,
         userRequest: OAuth2UserRequest,
     ): Member {
         if (!memberRepository.existsByGithubId(githubId)) {
             memberRepository.save(
                 memberMapper.toEntity(
-                    name,
                     githubId,
                     profileImage,
                 ),
@@ -42,7 +41,7 @@ class MemberService(
             getEntityByGithubId(githubId)
 
         if (member.hasNoAuthStep()) {
-            member.join(name, profileImage)
+            member.join(profileImage)
         }
         member.updateGithubToken(userRequest.accessToken.tokenValue)
         return member
@@ -54,7 +53,15 @@ class MemberService(
     fun getEntity(id: Long): Member = memberRepository.findByIdOrNull(id) ?: throw EntityNotFoundException.member()
 
     fun updateContributions(member: Member) {
-        contributionFacade.updateContributions(member)
+        contributionFacade.updateContributions(
+            ContributionRequest(
+                member.id!!,
+                member.githubId,
+                member.githubToken!!,
+                member.organization?.id,
+                member.organization?.organizationType,
+            )
+        )
     }
 
     fun getContributions(memberId: Long): List<ContributionResponse> =

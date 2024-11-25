@@ -1,5 +1,6 @@
 package com.dragonguard.core.domain.rank
 
+import com.dragonguard.core.domain.contribution.dto.ContributionRequest
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.organization.OrganizationType
 import com.dragonguard.core.domain.rank.dto.MemberRank
@@ -13,14 +14,18 @@ class RankRedisService(
     private val redisTemplate: RedisTemplate<String, String>,
 ) : RankService {
     override fun addContribution(
-        member: Member,
+        contributionRequest: ContributionRequest,
         totalAmount: Int,
     ) {
         try {
-            updateRank(MEMBER_RANK_KEY, member.githubId, totalAmount)
-            member.organization?.let {
-                updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${it.id}", member.githubId, totalAmount)
-                updateRank("${ORGANIZATION_TYPE_RANK_KEY}${it.organizationType.name}", member.githubId, totalAmount)
+            updateRank(MEMBER_RANK_KEY, contributionRequest.githubId, totalAmount)
+            contributionRequest.organizationId?.let {
+                updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${it}", contributionRequest.githubId, totalAmount)
+                updateRank(
+                    "${ORGANIZATION_TYPE_RANK_KEY}${contributionRequest.organizationType?.name}",
+                    contributionRequest.githubId,
+                    totalAmount
+                )
             }
         } catch (e: Exception) {
             throw RankAccessException.update(e)

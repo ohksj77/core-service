@@ -1,5 +1,6 @@
 package com.dragonguard.core.domain.contribution
 
+import com.dragonguard.core.domain.contribution.dto.ContributionRequest
 import com.dragonguard.core.domain.contribution.dto.ContributionResponse
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.rank.RankService
@@ -15,15 +16,15 @@ class ContributionFacade(
     private val rankService: RankService,
 ) {
     @Async("virtualAsyncTaskExecutor")
-    fun updateContributions(member: Member) {
+    fun updateContributions(contributionRequest: ContributionRequest) {
         val year: Int = LocalDateTime.now().year
-        val contributionClientResult = contributionClientService.getContributions(member, year)
+        val contributionClientResult = contributionClientService.getContributions(contributionRequest, year)
 
         rankService.addContribution(
-            member,
+            contributionRequest,
             contributionClientResult.getTotal(),
         )
-        contributionService.saveContribution(contributionClientResult, member, year)
+        contributionService.saveContribution(contributionClientResult, contributionRequest.memberId, year)
     }
 
     fun getMemberContributions(memberId: Long): List<ContributionResponse> =

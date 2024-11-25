@@ -144,7 +144,6 @@ class MemberControllerTest : RestDocsTest() {
                         fieldWithPath("code").description("http 상태 코드"),
                         fieldWithPath("message").description("성공 메시지"),
                         fieldWithPath("data.github_id").description("깃허브 id"),
-                        fieldWithPath("data.name").description("회원명"),
                         fieldWithPath("data.commits").description("커밋 개수"),
                         fieldWithPath("data.issues").description("이슈 개수"),
                         fieldWithPath("data.pull_requests").description("풀리퀘스트 개수"),
