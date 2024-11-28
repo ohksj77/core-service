@@ -140,7 +140,7 @@ class RankRedisService(
                 MEMBER_RANK_KEY.toByteArray(),
                 member.githubId.toByteArray(),
             )
-        }
+        }?.plus(1L)
 
     private fun getOrganizationRankByMember(member: Member): Long? =
         member.organization?.let {
@@ -150,7 +150,7 @@ class RankRedisService(
                     member.githubId.toByteArray(),
                 )
             }
-        }
+        }?.plus(1L)
 
     private fun findAllOrganizationMembers(
         member: Member,
