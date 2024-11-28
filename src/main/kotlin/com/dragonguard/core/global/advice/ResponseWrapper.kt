@@ -16,7 +16,7 @@ class ResponseWrapper : ResponseBodyAdvice<Any?> {
     override fun supports(
         returnType: MethodParameter,
         converterType: Class<out HttpMessageConverter<*>>,
-    ): Boolean = returnType.getParameterType() == String::class.java
+    ): Boolean = returnType.getParameterType() != String::class.java
 
     override fun beforeBodyWrite(
         body: Any?,
