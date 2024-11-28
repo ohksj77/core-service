@@ -88,8 +88,8 @@ class RankRedisService(
         try {
             val totalMemberNum =
                 getTotalMemberNum(member)
-            val organizationRank = getOrganizationRank(member) ?: 0L
-            val rank = getRank(member) ?: 0L
+            val rank = getRankByMember(member) ?: 0L
+            val organizationRank = getOrganizationRankByMember(member) ?: 0L
 
             if (totalMemberNum <= 3L) {
                 val githubIds = findAllOrganizationMembers(member, totalMemberNum)
@@ -122,7 +122,7 @@ class RankRedisService(
         }
 
     override fun getMemberRank(member: Member): Int =
-        getMemberRank(member)
+        getRankByMember(member)?.toInt() ?: 0
 
     private fun calculateAdjacentRanks(
         it: Long,
@@ -134,19 +134,19 @@ class RankRedisService(
             else -> listOf(it - 1L, it + 1L)
         }
 
-    private fun getOrganizationRank(member: Member): Long? =
+    private fun getRankByMember(member: Member): Long? =
         redisTemplate.execute { connection ->
             connection.zSetCommands().zRank(
-                "${ORGANIZATION_MEMBER_RANK_KEY}${member.githubId}".toByteArray(),
+                MEMBER_RANK_KEY.toByteArray(),
                 member.githubId.toByteArray(),
             )
         }
 
-    private fun getRank(member: Member): Long? =
+    private fun getOrganizationRankByMember(member: Member): Long? =
         member.organization?.let {
             redisTemplate.execute { connection ->
                 connection.zSetCommands().zRank(
-                    MEMBER_RANK_KEY.toByteArray(),
+                    "${ORGANIZATION_MEMBER_RANK_KEY}${it.id}".toByteArray(),
                     member.githubId.toByteArray(),
                 )
             }
@@ -170,10 +170,12 @@ class RankRedisService(
         } ?: emptyList()
 
     private fun getTotalMemberNum(member: Member): Long =
-        redisTemplate.execute { connection ->
-            connection.zSetCommands().zCard(
-                "${ORGANIZATION_MEMBER_RANK_KEY}${member.githubId}".toByteArray(),
-            )
+        member.organization?.let {
+            redisTemplate.execute { connection ->
+                connection.zSetCommands().zCard(
+                    "${ORGANIZATION_MEMBER_RANK_KEY}${it.id}".toByteArray(),
+                )
+            }
         } ?: 0L
 
     companion object {
