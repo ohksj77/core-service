@@ -14,3 +14,14 @@ operation::post organization[snippets='http-request,http-response,request-header
 
 operation::post organization join[snippets='http-request,http-response,request-headers,request-fields,response-fields']
 
+=== 조직 id 조회
+
+operation::get organization id[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 조직 타입으로 검색
+
+operation::get organization by type[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 조직 타입과 검색어로 검색
+
+operation::get organization by type and name[snippets='http-request,http-response,request-headers,query-parameters,response-fields']

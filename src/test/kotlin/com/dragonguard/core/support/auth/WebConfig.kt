@@ -15,7 +15,7 @@ class WebConfig(
     private val mockAuthorizedMemberIdArgumentResolver: MockAuthorizedMemberIdArgumentResolver,
 ) : WebMvcConfigurer {
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
-        resolvers.add(mockAuthorizedMemberArgumentResolver)
-        resolvers.add(mockAuthorizedMemberIdArgumentResolver)
+        resolvers.add(0, mockAuthorizedMemberArgumentResolver)
+        resolvers.add(1, mockAuthorizedMemberIdArgumentResolver)
     }
 }

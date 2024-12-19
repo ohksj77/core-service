@@ -11,12 +11,13 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @TestComponent
 class MockAuthorizedMemberArgumentResolver : HandlerMethodArgumentResolver {
-    override fun supportsParameter(parameter: MethodParameter): Boolean = parameter.hasParameterAnnotation(AuthorizedMember::class.java)
+    override fun supportsParameter(parameter: MethodParameter): Boolean =
+        parameter.hasParameterAnnotation(AuthorizedMember::class.java)
 
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): Any = Member("test-name", "test-githubId", "test-profileImage")
+    ): Any = Member("test-githubId", "test-profileImage")
 }

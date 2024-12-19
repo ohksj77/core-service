@@ -16,7 +16,7 @@ class AuthController(
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("refresh")
     fun refresh(
-        @RequestHeader refreshToken: String?,
-        @RequestHeader accessToken: String?,
+        @RequestHeader(name = "Refresh") refreshToken: String?,
+        @RequestHeader(name = "Access") accessToken: String?,
     ): JwtToken = authService.refresh(refreshToken, accessToken)
 }
