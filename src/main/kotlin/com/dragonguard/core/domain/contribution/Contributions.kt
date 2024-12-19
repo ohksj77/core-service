@@ -12,9 +12,17 @@ class Contributions {
     fun total(): Int = contributions.sumOf { it.amount }
 
     fun addAll(contributions: List<Contribution>): Int {
-        contributions.filter { it.amount - numOfType(it.contributionType) > 0 }
-            .forEach { this.contributions.add(it) }
-        return contributions.sumOf { it.amount }
+        var count = 0
+        contributions
+            .forEach {
+                val value = it.amount - numOfType(it.contributionType)
+                if (value > 0) {
+                    it.amount = value
+                    this.contributions.add(it)
+                    count += value
+                }
+            }
+        return count
     }
 
     fun numOfType(type: ContributionType): Int =
