@@ -3,6 +3,7 @@ package com.dragonguard.core.domain.gitorg
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.global.audit.BaseEntity
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.OneToMany
 import org.hibernate.annotations.NaturalId
@@ -13,6 +14,7 @@ import org.hibernate.annotations.SoftDelete
 class GitOrg(
     @NaturalId
     val name: String,
+    @Column(length = 500)
     val profileImage: String,
 ) : BaseEntity() {
     constructor(name: String, profileImage: String, member: Member) : this(name, profileImage) {

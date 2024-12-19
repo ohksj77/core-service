@@ -27,6 +27,7 @@ class Member(
     @NaturalId
     @Column(nullable = false, unique = true)
     var githubId: String,
+    @Column(length = 500)
     var profileImage: String,
 ) : BaseEntity() {
     @JoinColumn
