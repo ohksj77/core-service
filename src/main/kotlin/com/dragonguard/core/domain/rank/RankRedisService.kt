@@ -2,20 +2,26 @@ package com.dragonguard.core.domain.rank
 
 import com.dragonguard.core.domain.contribution.dto.ContributionRequest
 import com.dragonguard.core.domain.member.Member
+import com.dragonguard.core.domain.organization.Organization
 import com.dragonguard.core.domain.organization.OrganizationType
-import com.dragonguard.core.domain.rank.dto.MemberRank
+import com.dragonguard.core.domain.rank.dto.MemberRankResponse
+import com.dragonguard.core.domain.rank.dto.OrganizationRankResponse
 import com.dragonguard.core.domain.rank.dto.ProfileRank
 import com.dragonguard.core.domain.rank.exception.RankAccessException
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class RankRedisService(
     private val redisTemplate: RedisTemplate<String, String>,
+    private val objectMapper: ObjectMapper,
 ) : RankService {
     override fun addContribution(
         contributionRequest: ContributionRequest,
         totalAmount: Int,
+        member: Member,
     ) {
         try {
             updateRank(MEMBER_RANK_KEY, contributionRequest.githubId, totalAmount)
@@ -26,11 +32,54 @@ class RankRedisService(
                     contributionRequest.githubId,
                     totalAmount
                 )
+                updateRank(ORGANIZATION_RANK_KEY, it.toString(), totalAmount)
+                updateOrganizationDetails(member.organization)
             }
+            updateMemberDetails(member)
         } catch (e: Exception) {
             throw RankAccessException.update(e)
         }
     }
+
+    private fun updateOrganizationDetails(organization: Organization?) {
+        redisTemplate
+            .opsForValue()[getMemberDetailsKey(organization?.id.toString())] = convertToJson(
+            OrganizationRankResponse(
+                organization?.id,
+                organization?.name,
+                organization?.organizationType,
+            )
+        )
+    }
+
+    private fun updateMemberDetails(member: Member) {
+        redisTemplate
+            .opsForValue()[getMemberDetailsKey(member.githubId)] = convertToJson(
+            MemberRankResponse(
+                member.id,
+                member.githubId,
+                member.tier,
+                member.profileImage,
+            )
+        )
+    }
+
+    private fun getMemberDetailsKey(githubId: String): String = MEMBER_DETAILS + githubId
+
+    private fun convertToJson(memberRank: MemberRankResponse): String =
+        try {
+            objectMapper.writeValueAsString(memberRank)
+        } catch (e: JsonProcessingException) {
+            throw RankAccessException.parseJson(e)
+        }
+
+    private fun convertToJson(organizationRank: OrganizationRankResponse): String =
+        try {
+            objectMapper.writeValueAsString(organizationRank)
+        } catch (e: JsonProcessingException) {
+            throw RankAccessException.parseJson(e)
+        }
+
 
     private fun updateRank(
         target: String,
@@ -47,27 +96,34 @@ class RankRedisService(
     }
 
     override fun getMemberRank(
-        start: Long,
-        end: Long,
-    ): List<MemberRank> = getRank(MEMBER_RANK_KEY, start, end)
+        page: Long,
+        size: Long,
+    ): List<MemberRankResponse> = getMemberRank(MEMBER_RANK_KEY, page, size)
 
     override fun getOrganizationRank(
         organizationType: OrganizationType,
-        start: Long,
-        end: Long,
-    ): List<MemberRank> = getRank("${ORGANIZATION_TYPE_RANK_KEY}${organizationType.name}", start, end)
+        page: Long,
+        size: Long,
+    ): List<OrganizationRankResponse> =
+        getOrganizationRank("${ORGANIZATION_TYPE_RANK_KEY}${organizationType.name}", page, size)
+
+    override fun getAllOrganizationRank(page: Long, size: Long): List<OrganizationRankResponse> =
+        getOrganizationRank(ORGANIZATION_RANK_KEY, page, size)
 
     override fun getOrganizationMemberRank(
         organizationId: Long,
-        start: Long,
-        end: Long,
-    ): List<MemberRank> = getRank("${ORGANIZATION_MEMBER_RANK_KEY}$organizationId", start, end)
+        page: Long,
+        size: Long,
+    ): List<MemberRankResponse> =
+        getMemberRank("${ORGANIZATION_MEMBER_RANK_KEY}$organizationId", page, size)
 
-    private fun getRank(
+    private fun getOrganizationRank(
         target: String,
-        start: Long,
-        end: Long,
+        page: Long,
+        size: Long,
     ) = try {
+        val start = page * size
+        val end = (page + 1) * size - 1
         val rank =
             redisTemplate.execute { connection ->
                 connection.zSetCommands().zRevRangeWithScores(
@@ -78,7 +134,30 @@ class RankRedisService(
             }
 
         rank?.map {
-            MemberRank(it.value.toString(), it.score.toLong())
+            getOrganizationDetails(it.value.toString().toLong(), it.score.toLong())
+        } ?: emptyList()
+    } catch (e: Exception) {
+        throw RankAccessException.get(e)
+    }
+
+    private fun getMemberRank(
+        target: String,
+        page: Long,
+        size: Long,
+    ) = try {
+        val start = page * size
+        val end = (page + 1) * size - 1
+        val rank =
+            redisTemplate.execute { connection ->
+                connection.zSetCommands().zRevRangeWithScores(
+                    target.toByteArray(),
+                    start,
+                    end,
+                )
+            }
+
+        rank?.map {
+            getMemberDetails(it.value.toString(), it.score.toLong())
         } ?: emptyList()
     } catch (e: Exception) {
         throw RankAccessException.get(e)
@@ -121,7 +200,7 @@ class RankRedisService(
             throw RankAccessException.get(e)
         }
 
-    override fun getMemberRank(member: Member): Int =
+    override fun getMemberRankValue(member: Member): Int =
         getRankByMember(member)?.toInt() ?: 0
 
     private fun calculateAdjacentRanks(
@@ -178,9 +257,43 @@ class RankRedisService(
             }
         } ?: 0L
 
+    private fun getMemberDetails(githubId: String, contributionAmount: Long): MemberRankResponse {
+        val memberDetailsJson = redisTemplate.opsForValue().get(getMemberDetailsKey(githubId))
+        val rankResponse = convertMemberDetailsFromJson(memberDetailsJson)
+        rankResponse.contributionAmount = contributionAmount
+        return rankResponse
+    }
+
+    private fun getOrganizationDetails(organizationId: Long, contributionAmount: Long): OrganizationRankResponse {
+        val organizationDetailsJson =
+            redisTemplate.opsForValue().get(getMemberDetailsKey(organizationId.toString()))
+        val rankResponse = convertOrganizationFromJson(organizationDetailsJson)
+        rankResponse.contributionAmount = contributionAmount
+        return rankResponse
+    }
+
+    private fun convertOrganizationFromJson(organizationDetailsJson: String?): OrganizationRankResponse {
+        return try {
+            objectMapper.readValue(organizationDetailsJson, OrganizationRankResponse::class.java)
+        } catch (e: Exception) {
+            throw RankAccessException.parseJson(e)
+        }
+    }
+
+    private fun convertMemberDetailsFromJson(memberDetailsJson: String?): MemberRankResponse {
+        return try {
+            objectMapper.readValue(memberDetailsJson, MemberRankResponse::class.java)
+        } catch (e: Exception) {
+            throw RankAccessException.parseJson(e)
+        }
+    }
+
+
     companion object {
         private const val MEMBER_RANK_KEY = "rank:member"
+        private const val ORGANIZATION_RANK_KEY = "rank:organization"
         private const val ORGANIZATION_TYPE_RANK_KEY = "rank:organization:type:"
         private const val ORGANIZATION_MEMBER_RANK_KEY = "rank:organization:member:"
+        private const val MEMBER_DETAILS = "member:details:"
     }
 }

@@ -85,7 +85,7 @@ class MemberService(
 
     fun getDetailsById(memberId: Long): MemberDetailsResponse {
         val member: Member =
-            memberRepository.findByIdWithContributions(memberId) ?: throw EntityNotFoundException.member()
+            memberRepository.findByIdOrNull(memberId) ?: throw EntityNotFoundException.member()
         val gitRepos: List<String> = gitRepoService.getNamesByMemberId(memberId)
         val rank: Int = contributionFacade.getMemberRank(member)
         return memberMapper.toDetailsResponse(member, gitRepos, rank)
@@ -93,7 +93,7 @@ class MemberService(
 
     fun getDetailsByGithubId(githubId: String): MemberDetailsResponse {
         val member: Member =
-            memberRepository.findByGithubIdWithContributions(githubId) ?: throw EntityNotFoundException.member()
+            memberRepository.findByGithubId(githubId) ?: throw EntityNotFoundException.member()
         val gitRepos: List<String> = gitRepoService.getNamesByMemberId(member.id!!)
         val rank: Int = contributionFacade.getMemberRank(member)
         return memberMapper.toDetailsResponse(member, gitRepos, rank)

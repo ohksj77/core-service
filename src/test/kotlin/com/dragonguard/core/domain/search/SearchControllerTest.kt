@@ -42,7 +42,7 @@ class SearchControllerTest : RestDocsTest() {
         val perform: ResultActions =
             mockMvc.perform(
                 RestDocumentationRequestBuilders
-                    .get("/search?type=MEMBER&q=dragon&page=1")
+                    .get("/search")
                     .queryParam("type", "MEMBER")
                     .queryParam("q", "dragon")
                     .queryParam("page", "1")
