@@ -49,7 +49,7 @@ class RankRedisService(
 
     private fun updateOrganizationDetails(organization: Organization?) {
         redisTemplate
-            .opsForValue()[getMemberDetailsKey(organization?.id.toString())] = convertToJson(
+            .opsForValue()[getOrganizationDetailsKey(organization?.id.toString())] = convertToJson(
             OrganizationRankResponse(
                 organization?.id,
                 organization?.name,
@@ -71,6 +71,8 @@ class RankRedisService(
     }
 
     private fun getMemberDetailsKey(githubId: String): String = MEMBER_DETAILS + githubId
+
+    private fun getOrganizationDetailsKey(id: String): String = ORGANIZATION_DETAILS + id
 
     private fun convertToJson(memberRank: Any): String =
         try {
@@ -139,7 +141,7 @@ class RankRedisService(
             val adjacentRanks = calculateAdjacentRanks(organizationRank, totalMemberNum)
             redisTemplate
                 .opsForZSet()
-                .range("${ORGANIZATION_MEMBER_RANK_KEY}${member.githubId}", adjacentRanks[0], adjacentRanks[1])
+                .range("${ORGANIZATION_MEMBER_RANK_KEY}${member.organization?.id}", adjacentRanks[0], adjacentRanks[1])
                 ?.let { githubIds ->
                     ProfileRank(
                         githubIds.map { it.toString() },
@@ -200,5 +202,6 @@ class RankRedisService(
         private const val ORGANIZATION_TYPE_RANK_KEY = "rank:organization_type:"
         private const val ORGANIZATION_RANK_KEY = "rank:organization"
         private const val MEMBER_DETAILS = "rank:member_details:"
+        private const val ORGANIZATION_DETAILS = "rank:organization_details:"
     }
 }
