@@ -30,7 +30,6 @@ class RedisConfig {
         val redisTemplate = RedisTemplate<String, String>()
         redisTemplate.connectionFactory = cf
         redisTemplate.keySerializer = StringRedisSerializer()
-        redisTemplate.setEnableTransactionSupport(true)
         return redisTemplate
     }
 

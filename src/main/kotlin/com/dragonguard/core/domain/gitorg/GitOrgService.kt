@@ -9,6 +9,7 @@ import com.dragonguard.core.global.exception.EntityNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class GitOrgService(
@@ -21,6 +22,7 @@ class GitOrgService(
     fun getOrgsByMemberId(memberId: Long): List<GitOrgResponse> =
         gitOrgMapper.toResponses(gitOrgRepository.findByMemberId(memberId))
 
+    @Transactional
     @Async("virtualAsyncTaskExecutor")
     fun updateGitOrg(memberId: Long, githubToken: String, githubId: String) {
         val response = gitOrgClient.request(GitOrgClientRequest(githubId, githubToken))
@@ -28,7 +30,7 @@ class GitOrgService(
             it.login != null && it.avatarUrl != null
         }.map {
             val gitRepo =
-                gitOrgRepository.findByName(it.login!!) ?: gitOrgRepository.save(GitOrg(it.login!!, it.avatarUrl!!))
+                gitOrgRepository.findByName(it.login!!) ?: gitOrgRepository.save(GitOrg(it.login, it.avatarUrl!!))
             gitRepo.addMember(getMember(memberId))
             gitRepo
         }.toList()
