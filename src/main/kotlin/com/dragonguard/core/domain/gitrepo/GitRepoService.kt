@@ -20,8 +20,8 @@ class GitRepoService(
     @Async("virtualAsyncTaskExecutor")
     fun updateGitRepo(memberId: Long, githubToken: String, githubId: String) {
         val response = memberGitRepoClient.request(GitRepoClientRequest(githubId, githubToken))
-        val gitRepos = response.map {
-            val gitRepo = gitRepoRepository.findByName() ?: gitRepoRepository.save(GitRepo(it.fullName))
+        val gitRepos = response.filter { it.fullName != null }.map {
+            val gitRepo = gitRepoRepository.findByName() ?: gitRepoRepository.save(GitRepo(it.fullName!!))
             gitRepo.addMember(getMember(memberId))
             gitRepo
         }.toList()

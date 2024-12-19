@@ -24,8 +24,10 @@ class GitOrgService(
     @Async("virtualAsyncTaskExecutor")
     fun updateGitOrg(memberId: Long, githubToken: String, githubId: String) {
         val response = gitOrgClient.request(GitOrgClientRequest(githubId, githubToken))
-        val gitRepos = response.map {
-            val gitRepo = gitOrgRepository.findByName() ?: gitOrgRepository.save(GitOrg(it.login, it.avatarUrl))
+        val gitRepos = response.filter {
+            it.login != null && it.avatarUrl != null
+        }.map {
+            val gitRepo = gitOrgRepository.findByName() ?: gitOrgRepository.save(GitOrg(it.login!!, it.avatarUrl!!))
             gitRepo.addMember(getMember(memberId))
             gitRepo
         }.toList()
