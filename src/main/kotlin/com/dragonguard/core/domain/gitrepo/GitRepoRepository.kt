@@ -7,4 +7,7 @@ interface GitRepoRepository : JpaRepository<GitRepo, Long> {
 
     @Query("SELECT DISTINCT gr.name FROM GitRepo gr JOIN gr.gitRepoMembers grm WHERE grm.member.id = :memberId")
     fun findNamesByMemberId(memberId: Long): List<String>
+
+    @Query("SELECT gr FROM GitRepo gr WHERE gr.name = :name")
+    fun findByName(): GitRepo?
 }

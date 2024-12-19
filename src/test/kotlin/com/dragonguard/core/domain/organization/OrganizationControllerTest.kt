@@ -78,7 +78,7 @@ class OrganizationControllerTest : RestDocsTest() {
                     ),
                     requestFields(
                         fieldWithPath("name").description("조직 이름"),
-                        fieldWithPath("email_end_point").description("조직 도메인"),
+                        fieldWithPath("email_endpoint").description("조직 도메인"),
                         fieldWithPath("organization_type").description("조직 유형")
                     ),
                     responseFields(

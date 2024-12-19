@@ -1,0 +1,11 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Git Organization
+
+=== 회원 Git 조직 목록 조회
+
+operation::get git-orgs[snippets='http-request,http-response,request-headers,response-fields']
