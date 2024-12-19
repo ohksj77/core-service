@@ -24,14 +24,14 @@ class ContributionFacade(
         val contributionClientResult = contributionClientService.getContributions(contributionRequest, year)
         val updated =
             contributionService.saveContribution(contributionClientResult, contributionRequest.memberId, year)
-        
-        if (!updated) {
+
+        if (updated <= 0) {
             return
         }
 
         rankService.addContribution(
             contributionRequest,
-            contributionClientResult.getTotal(),
+            updated,
             getMember(contributionRequest.memberId)
         )
     }

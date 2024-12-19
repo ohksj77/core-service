@@ -19,7 +19,7 @@ class ContributionService(
         contributionClientResult: ContributionClientResult,
         memberId: Long,
         year: Int,
-    ): Boolean {
+    ): Int {
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw EntityNotFoundException.member()
         val contributions =

@@ -91,7 +91,7 @@ class Member(
         this.profileImage = profileImage
     }
 
-    fun addContribution(contributions: List<Contribution>): Boolean {
+    fun addContribution(contributions: List<Contribution>): Int {
         val updated = this.contributions.addAll(contributions)
         updateTier()
         return updated
