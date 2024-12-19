@@ -9,5 +9,5 @@ interface GitOrgRepository : JpaRepository<GitOrg, Long> {
     fun findByMemberId(memberId: Long): List<GitOrg>
 
     @Query("SELECT go FROM GitOrg go WHERE go.name = :name")
-    fun findByName(): GitOrg?
+    fun findByName(name: String): GitOrg?
 }

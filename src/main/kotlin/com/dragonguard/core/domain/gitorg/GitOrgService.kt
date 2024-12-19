@@ -27,7 +27,8 @@ class GitOrgService(
         val gitRepos = response.filter {
             it.login != null && it.avatarUrl != null
         }.map {
-            val gitRepo = gitOrgRepository.findByName() ?: gitOrgRepository.save(GitOrg(it.login!!, it.avatarUrl!!))
+            val gitRepo =
+                gitOrgRepository.findByName(it.login!!) ?: gitOrgRepository.save(GitOrg(it.login!!, it.avatarUrl!!))
             gitRepo.addMember(getMember(memberId))
             gitRepo
         }.toList()

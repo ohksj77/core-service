@@ -21,7 +21,7 @@ class GitRepoService(
     fun updateGitRepo(memberId: Long, githubToken: String, githubId: String) {
         val response = memberGitRepoClient.request(GitRepoClientRequest(githubId, githubToken))
         val gitRepos = response.filter { it.fullName != null }.map {
-            val gitRepo = gitRepoRepository.findByName() ?: gitRepoRepository.save(GitRepo(it.fullName!!))
+            val gitRepo = gitRepoRepository.findByName(it.fullName!!) ?: gitRepoRepository.save(GitRepo(it.fullName!!))
             gitRepo.addMember(getMember(memberId))
             gitRepo
         }.toList()
