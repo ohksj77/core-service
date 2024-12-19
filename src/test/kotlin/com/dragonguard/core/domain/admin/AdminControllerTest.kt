@@ -76,7 +76,7 @@ class AdminControllerTest : RestDocsTest() {
     @Test
     fun `조직 상태 업데이트`() {
         // given
-        val expected = OrganizationFactory.createOrganizationResponses()
+        val expected = OrganizationFactory.createAdminOrganizationResponses()
 
         BDDMockito
             .given(adminService.decide(any(Long::class.java), any(AdminDecideRequest::class.java)))
@@ -128,7 +128,7 @@ class AdminControllerTest : RestDocsTest() {
     @Test
     fun `조직 상태별 조회`() {
         // given
-        val expected = OrganizationFactory.createOrganizationResponses()
+        val expected = OrganizationFactory.createAdminOrganizationResponses()
 
         BDDMockito
             .given(

@@ -3,6 +3,7 @@ package com.dragonguard.core.support.docs
 import com.dragonguard.core.config.security.jwt.JwtProvider
 import com.dragonguard.core.config.security.jwt.JwtValidator
 import com.dragonguard.core.domain.member.MemberService
+import com.dragonguard.core.support.auth.WebConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 
 @ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
-@Import(RestDocsConfig::class)
+@Import(RestDocsConfig::class, WebConfig::class)
 @AutoConfigureRestDocs
 @WebMvcTest
 abstract class RestDocsTest {

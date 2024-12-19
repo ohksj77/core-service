@@ -6,6 +6,8 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.OneToMany
 import org.hibernate.annotations.SoftDelete
 
 @Entity
@@ -17,6 +19,12 @@ class Organization(
     @Enumerated(EnumType.STRING)
     var organizationType: OrganizationType,
 ) : BaseEntity() {
+    @Enumerated(EnumType.STRING)
+    var organizationStatus: OrganizationStatus = OrganizationStatus.REQUESTED
+
+    @OneToMany(fetch = FetchType.LAZY)
+    var members: MutableList<Member> = mutableListOf()
+
     fun validateAndUpdateEmail(member: Member, email: String) {
         if (!email.endsWith(emailEndpoint)) {
             throw InvalidEmailException()
@@ -24,10 +32,10 @@ class Organization(
         member.email = email
     }
 
-    @Enumerated(EnumType.STRING)
-    var organizationStatus: OrganizationStatus = OrganizationStatus.REQUESTED
-
     fun approve() {
         this.organizationStatus = OrganizationStatus.APPROVED
     }
+
+    fun memberContributionAmount(): Int =
+        members.sumOf { it.contributions.total() }
 }
