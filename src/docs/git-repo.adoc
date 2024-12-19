@@ -1,0 +1,11 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Git Repository
+
+=== 회원 Git 저장소 목록 조회
+
+operation::get git-repos[snippets='http-request,http-response,request-headers,response-fields']

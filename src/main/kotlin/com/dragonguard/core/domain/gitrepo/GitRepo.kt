@@ -1,5 +1,6 @@
 package com.dragonguard.core.domain.gitrepo
 
+import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.global.audit.BaseEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.CollectionTable
@@ -13,18 +14,19 @@ import org.hibernate.annotations.SoftDelete
 @SoftDelete
 class GitRepo(
     @NaturalId
-    val name: String,
+    val name: String
+) : BaseEntity() {
+
     @CollectionTable
     @ElementCollection
-    val sparkLine: List<Int>,
-    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE], mappedBy = "gitRepo")
-    val gitRepoMembers: MutableList<GitRepoMember> = mutableListOf(),
-) : BaseEntity() {
-    constructor(name: String, sparkLine: List<Int>, gitRepoMember: GitRepoMember) : this(name, sparkLine) {
-        organize(gitRepoMember)
-    }
+    var sparkLine: MutableList<Int> = mutableListOf()
+        protected set
 
-    private fun organize(gitRepoMember: GitRepoMember) {
-        gitRepoMembers.add(gitRepoMember)
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE], mappedBy = "gitRepo")
+    var gitRepoMembers: MutableList<GitRepoMember> = mutableListOf()
+        protected set
+
+    fun addMember(member: Member) {
+        gitRepoMembers.add(GitRepoMember(this, member))
     }
 }

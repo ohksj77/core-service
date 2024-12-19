@@ -14,7 +14,9 @@ class GitRepoMember(
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     var gitRepo: GitRepo,
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
-    var member: Member,
+    var member: Member
+) : BaseEntity() {
     @Embedded
-    var gitRepoContribution: GitRepoContribution,
-) : BaseEntity()
+    var gitRepoContribution: GitRepoContribution? = null
+        protected set
+}

@@ -26,4 +26,8 @@ class GitOrg(
         val gitOrgMember = GitOrgMember(member.id!!, this)
         gitOrgMembers.add(gitOrgMember)
     }
+
+    fun addMember(entity: Member) {
+        organize(entity)
+    }
 }
