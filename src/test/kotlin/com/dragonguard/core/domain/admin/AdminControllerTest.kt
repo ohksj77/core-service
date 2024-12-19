@@ -148,7 +148,6 @@ class AdminControllerTest : RestDocsTest() {
                     .queryParam("page", "0")
                     .queryParam("size", "10")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(toRequestBody(AdminDecideRequest(OrganizationStatus.APPROVED)))
                     .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"),
             )
 

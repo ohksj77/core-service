@@ -9,7 +9,7 @@ data class OrganizationRequest(
     @field:Length(min = 2)
     val name: String?,
     @field:NotBlank
-    val emailEndPoint: String?,
+    val emailEndpoint: String?,
     @field:NotNull
     val organizationType: OrganizationType?,
 )

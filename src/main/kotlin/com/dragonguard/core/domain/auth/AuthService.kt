@@ -7,6 +7,7 @@ import com.dragonguard.core.config.security.oauth.user.UserPrinciple
 import com.dragonguard.core.domain.auth.exception.JwtProcessingException
 import com.dragonguard.core.domain.member.MemberService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AuthService(
@@ -14,12 +15,13 @@ class AuthService(
     private val jwtProvider: JwtProvider,
     private val jwtValidator: JwtValidator,
 ) {
+    @Transactional
     fun refresh(
         oldRefreshToken: String?,
         oldAccessToken: String?,
     ): JwtToken {
         validateTokens(oldRefreshToken, oldAccessToken)
-        val userPrinciple: UserPrinciple = getAuthenticationByToken(oldRefreshToken)
+        val userPrinciple: UserPrinciple = getAuthenticationByToken(oldAccessToken)
 
         return getMemberAndUpdateRefreshToken(userPrinciple)
     }
@@ -33,8 +35,8 @@ class AuthService(
         return jwtToken
     }
 
-    private fun getAuthenticationByToken(oldRefreshToken: String?): UserPrinciple =
-        oldRefreshToken?.let { jwtValidator.getAuthentication(it).principal } as UserPrinciple
+    private fun getAuthenticationByToken(oldAccessToken: String?): UserPrinciple =
+        oldAccessToken?.let { jwtValidator.getAuthentication(it).principal } as UserPrinciple
 
     private fun validateTokens(
         oldRefreshToken: String?,

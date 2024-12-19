@@ -12,8 +12,18 @@ class AdminInterceptor(
 ) : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        val token = request.getHeader(TOKEN_HEADER).substring(TOKEN_PREFIX_LENGTH)
-        return jwtValidator.isAdmin(token)
+        val authHeader = request.getHeader(TOKEN_HEADER)
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증 토큰이 없거나 유효하지 않습니다.")
+            return false
+        }
+
+        val token = authHeader.substring(TOKEN_PREFIX_LENGTH)
+        if (!jwtValidator.isAdmin(token)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자 권한이 없습니다.")
+            return false
+        }
+        return true
     }
 
     companion object {

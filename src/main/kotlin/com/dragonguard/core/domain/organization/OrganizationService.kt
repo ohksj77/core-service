@@ -21,7 +21,7 @@ class OrganizationService(
     fun create(organizationRequest: OrganizationRequest): IdResponse {
         val organization = Organization(
             organizationRequest.name!!,
-            organizationRequest.emailEndPoint!!,
+            organizationRequest.emailEndpoint!!,
             organizationRequest.organizationType!!
         )
         val id = organizationRepository.save(organization).id
