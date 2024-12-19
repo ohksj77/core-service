@@ -1,6 +1,9 @@
 package com.dragonguard.core.config.client
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,10 +16,9 @@ import java.net.http.HttpClient
 import java.time.Duration
 import java.util.concurrent.Executors
 
+
 @Configuration
-class RestClientConfig(
-    private val objectMapper: ObjectMapper,
-) {
+class RestClientConfig {
     companion object {
         private const val GITHUB_API_MIME_TYPE = "application/vnd.github+json"
         private const val REQUEST_TIMEOUT_DURATION = 20L
@@ -37,7 +39,7 @@ class RestClientConfig(
             .defaultHeader(versionKey, versionValue)
             .requestFactory(getClientHttpRequestFactory())
             .messageConverters { converters ->
-                converters.add(MappingJackson2HttpMessageConverter(objectMapper))
+                converters.add(MappingJackson2HttpMessageConverter(objectMapper()))
             }.build()
 
     private fun getClientHttpRequestFactory(): ClientHttpRequestFactory {
@@ -50,5 +52,13 @@ class RestClientConfig(
             )
         requestFactory.setReadTimeout(Duration.ofSeconds(REQUEST_TIMEOUT_DURATION))
         return requestFactory
+    }
+
+    private fun objectMapper(): ObjectMapper {
+        return ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
+            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
     }
 }

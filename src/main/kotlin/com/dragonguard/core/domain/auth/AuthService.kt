@@ -5,6 +5,8 @@ import com.dragonguard.core.config.security.jwt.JwtToken
 import com.dragonguard.core.config.security.jwt.JwtValidator
 import com.dragonguard.core.config.security.oauth.user.UserPrinciple
 import com.dragonguard.core.domain.auth.exception.JwtProcessingException
+import com.dragonguard.core.domain.gitorg.GitOrgService
+import com.dragonguard.core.domain.gitrepo.GitRepoService
 import com.dragonguard.core.domain.member.MemberService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,6 +16,8 @@ class AuthService(
     private val memberService: MemberService,
     private val jwtProvider: JwtProvider,
     private val jwtValidator: JwtValidator,
+    private val gitOrgService: GitOrgService,
+    private val gitRepoService: GitRepoService,
 ) {
     @Transactional
     fun refresh(
@@ -23,7 +27,13 @@ class AuthService(
         validateTokens(oldRefreshToken, oldAccessToken)
         val userPrinciple: UserPrinciple = getAuthenticationByToken(oldAccessToken)
 
-        return getMemberAndUpdateRefreshToken(userPrinciple)
+        val updatedRefreshToken = getMemberAndUpdateRefreshToken(userPrinciple)
+
+        val member = userPrinciple.member
+        gitOrgService.updateGitOrg(member.id!!, member.githubToken!!, member.githubId)
+        gitRepoService.updateGitRepo(member.id!!, member.githubToken!!, member.githubId)
+
+        return updatedRefreshToken
     }
 
     private fun getMemberAndUpdateRefreshToken(userPrinciple: UserPrinciple): JwtToken {

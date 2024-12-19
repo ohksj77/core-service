@@ -7,5 +7,7 @@ class RankAccessException(
         fun update(e: Exception): RankAccessException = RankAccessException("Cannot update rank: ${e.message}")
 
         fun get(e: Exception): RankAccessException = RankAccessException("Cannot get rank: ${e.message}")
+
+        fun parseJson(e: Exception): RankAccessException = RankAccessException("Cannot parse json: ${e.message}")
     }
 }

@@ -1,0 +1,23 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Rank
+
+=== 회원 랭킹 조회
+
+operation::get member ranks[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 조직 내 회원 랭킹 조회
+
+operation::get organization member ranks[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 타입별 조직 랭킹 조회
+
+operation::get organization ranks by type[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 조직 전체 랭킹 조회
+
+operation::get organization ranks all[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
