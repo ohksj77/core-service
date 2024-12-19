@@ -22,13 +22,18 @@ class ContributionFacade(
     fun updateContributions(contributionRequest: ContributionRequest) {
         val year: Int = LocalDateTime.now().year
         val contributionClientResult = contributionClientService.getContributions(contributionRequest, year)
+        val updated =
+            contributionService.saveContribution(contributionClientResult, contributionRequest.memberId, year)
+        
+        if (!updated) {
+            return
+        }
 
         rankService.addContribution(
             contributionRequest,
             contributionClientResult.getTotal(),
             getMember(contributionRequest.memberId)
         )
-        contributionService.saveContribution(contributionClientResult, contributionRequest.memberId, year)
     }
 
     private fun getMember(memberId: Long): Member =

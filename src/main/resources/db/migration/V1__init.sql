@@ -25,7 +25,7 @@ create table member
     github_id       varchar(255) not null unique,
     github_token    varchar(255),
     name            varchar(255),
-    profile_image   varchar(255),
+    profile_image   varchar(500),
     refresh_token   varchar(255),
     wallet_address  varchar(255),
     deleted         bit          not null comment 'Soft-delete indicator',
@@ -131,7 +131,7 @@ create table git_org
     created_at    datetime(6),
     updated_at    datetime(6),
     name          varchar(255) not null unique,
-    profile_image varchar(255),
+    profile_image varchar(500),
     deleted       bit          not null comment 'Soft-delete indicator',
     primary key (id)
 );

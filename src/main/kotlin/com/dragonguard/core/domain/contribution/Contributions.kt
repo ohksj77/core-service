@@ -11,13 +11,13 @@ class Contributions {
 
     fun total(): Int = contributions.sumOf { it.amount }
 
-    fun addAll(contributions: List<Contribution>) {
-        contributions.map {
-            val calculatedAmount = it.amount - numOfType(it.contributionType)
-            if (calculatedAmount > 0) {
-                this.contributions.add(Contribution(it.contributionType, calculatedAmount, it.year, it.member))
-            }
+    fun addAll(contributions: List<Contribution>): Boolean {
+        val values = contributions.map { it.amount - numOfType(it.contributionType) }.filter { it > 0 }
+        if (values.isNotEmpty()) {
+            this.contributions.addAll(contributions)
+            return true
         }
+        return false
     }
 
     fun numOfType(type: ContributionType): Int =

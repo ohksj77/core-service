@@ -19,13 +19,13 @@ class ContributionService(
         contributionClientResult: ContributionClientResult,
         memberId: Long,
         year: Int,
-    ) {
+    ): Boolean {
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw EntityNotFoundException.member()
         val contributions =
             contributionMapper.toEntities(contributionClientResult, member, year)
 
-        member.addContribution(contributions)
+        return member.addContribution(contributions)
     }
 
     fun getMemberContributions(memberId: Long): List<ContributionResponse> =

@@ -90,9 +90,10 @@ class Member(
         this.profileImage = profileImage
     }
 
-    fun addContribution(contributions: List<Contribution>) {
-        this.contributions.addAll(contributions)
+    fun addContribution(contributions: List<Contribution>): Boolean {
+        val updated = this.contributions.addAll(contributions)
         updateTier()
+        return updated
     }
 
     fun contributionNumOfType(type: ContributionType): Int = this.contributions.numOfType(type)
