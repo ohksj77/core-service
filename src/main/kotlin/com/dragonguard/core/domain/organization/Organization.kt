@@ -38,4 +38,9 @@ class Organization(
 
     fun memberContributionAmount(): Int =
         members.sumOf { it.contributions.total() }
+
+    fun addMember(member: Member) {
+        members.add(member)
+        member.organize(this)
+    }
 }

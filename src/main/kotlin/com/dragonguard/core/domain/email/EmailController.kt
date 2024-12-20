@@ -2,10 +2,11 @@ package com.dragonguard.core.domain.email
 
 import com.dragonguard.core.domain.email.dto.EmailCheckRequest
 import com.dragonguard.core.domain.email.dto.EmailCheckResponse
+import com.dragonguard.core.domain.member.Member
+import com.dragonguard.core.global.auth.AuthorizedMember
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,9 +26,13 @@ class EmailController(
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("{id}/check")
-    fun check(@Valid @ModelAttribute request: EmailCheckRequest, @PathVariable id: Long): EmailCheckResponse =
-        emailService.check(request, id)
+    @PostMapping("{id}/check")
+    fun check(
+        @Valid @ModelAttribute request: EmailCheckRequest,
+        @PathVariable id: Long,
+        @AuthorizedMember member: Member
+    ): EmailCheckResponse =
+        emailService.check(request, id, member)
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")

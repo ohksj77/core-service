@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.connection.RedisPassword
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
@@ -21,9 +23,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 class RedisConfig {
     @Bean
     fun redisConnectionFactory(
-        @Value("\${spring.data.redis.host}") host: String,
-        @Value("\${spring.data.redis.port}") port: Int,
-    ): RedisConnectionFactory = LettuceConnectionFactory(host, port)
+        @Value("\${spring.data.redis.host}") redisHost: String,
+        @Value("\${spring.data.redis.port}") redisPort: String,
+        @Value("\${spring.data.redis.password}") redisPassword: String
+    ): RedisConnectionFactory {
+        return LettuceConnectionFactory(
+            RedisStandaloneConfiguration().apply {
+                hostName = redisHost
+                port = redisPort.toInt()
+                password = RedisPassword.of(redisPassword)
+            }
+        )
+    }
 
     @Bean
     fun redisTemplate(cf: RedisConnectionFactory): RedisTemplate<String, String> {

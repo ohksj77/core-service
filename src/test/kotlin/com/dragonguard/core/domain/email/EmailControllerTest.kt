@@ -2,6 +2,7 @@ package com.dragonguard.core.domain.email
 
 import com.dragonguard.core.domain.email.dto.EmailCheckRequest
 import com.dragonguard.core.domain.email.dto.EmailCheckResponse
+import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.support.docs.RestDocsTest
 import com.dragonguard.core.support.docs.RestDocsUtils
 import org.junit.jupiter.api.Test
@@ -68,14 +69,20 @@ class EmailControllerTest : RestDocsTest() {
     fun `이메일 코드 확인`() {
         // given
         val expected = EmailCheckResponse(true)
-        BDDMockito.given(emailService.check(any(EmailCheckRequest::class.java), any(Long::class.java)))
+        BDDMockito.given(
+            emailService.check(
+                any(EmailCheckRequest::class.java),
+                any(Long::class.java),
+                any(Member::class.java)
+            )
+        )
             .willReturn(expected)
 
         // when
         val perform: ResultActions =
             mockMvc.perform(
                 RestDocumentationRequestBuilders
-                    .get("/email/{id}/check", 1)
+                    .post("/email/{id}/check", 1)
                     .queryParam("code", "12345")
                     .queryParam("organizationId", "2")
                     .contentType(MediaType.APPLICATION_JSON)
