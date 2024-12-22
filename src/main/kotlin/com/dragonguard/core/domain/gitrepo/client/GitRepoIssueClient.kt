@@ -8,7 +8,7 @@ import org.springframework.web.client.RestClient
 
 @Component
 class GitRepoIssueClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
         private const val PATH = "repos/%s/issues?state=closed&per_page=100&page=%d"
@@ -30,7 +30,7 @@ class GitRepoIssueClient(
         request: GitRepoDetailsClientRequest,
         page: Int,
     ): List<String>? =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.name, page))
             .headers { it.setBearerAuth(request.githubToken) }

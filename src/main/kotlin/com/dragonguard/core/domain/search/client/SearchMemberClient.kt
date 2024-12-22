@@ -9,17 +9,17 @@ import org.springframework.web.client.RestClient
 
 @Component
 class SearchMemberClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
-        private const val PATH = "search/users?q=%s&per_page=%d&page=%d"
+        private const val PATH = "search/users?q=%s&per_page=%d&page=10"
     }
 
     fun request(
         request: SearchRequest,
         githubToken: String,
     ): SearchMemberClientResponse =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.q, request.page))
             .headers { it.setBearerAuth(githubToken) }

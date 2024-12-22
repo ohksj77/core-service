@@ -9,14 +9,14 @@ import org.springframework.web.client.RestClient
 
 @Component
 class CommitClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
         private const val PATH = "search/commits?q=author:%s+committer-date:%d-01-01..%s-12-31"
     }
 
     fun request(request: ContributionClientRequest): ContributionClientResponse =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.githubId, request.year, request.year))
             .headers { it.setBearerAuth(request.githubToken) }

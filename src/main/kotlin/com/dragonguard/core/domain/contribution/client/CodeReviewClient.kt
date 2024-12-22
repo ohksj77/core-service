@@ -9,14 +9,14 @@ import org.springframework.web.client.RestClient
 
 @Component
 class CodeReviewClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
         private const val PATH = "search/issues?q=reviewed-by:%s+type:pr+created:%d-01-01..%d-12-31"
     }
 
     fun request(request: ContributionClientRequest): ContributionClientResponse =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.githubId, request.year, request.year))
             .headers { it.setBearerAuth(request.githubToken) }

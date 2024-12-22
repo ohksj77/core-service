@@ -6,6 +6,8 @@ class EntityNotFoundException(
     companion object {
         fun member() = EntityNotFoundException("Member not found")
         fun organization() = EntityNotFoundException("Organization not found")
-        fun email(): Throwable = EntityNotFoundException("Email not found")
+        fun email() = EntityNotFoundException("Email not found")
+        fun gitOrg() = EntityNotFoundException("GitOrg not found")
+        fun gitRepo() = EntityNotFoundException("GitRepo not found")
     }
 }

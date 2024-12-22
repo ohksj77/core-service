@@ -9,14 +9,14 @@ import org.springframework.web.client.RestClient
 
 @Component
 class GitRepoLanguageClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
         private const val PATH = "repos/%s/languages"
     }
 
     fun request(request: GitRepoDetailsClientRequest): Map<String, Int> =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.name))
             .headers { it.setBearerAuth(request.githubToken) }

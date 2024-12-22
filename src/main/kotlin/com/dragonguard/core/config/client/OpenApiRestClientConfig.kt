@@ -18,13 +18,13 @@ import java.util.concurrent.Executors
 
 
 @Configuration
-class RestClientConfig {
+class OpenApiRestClientConfig {
     companion object {
         private const val GITHUB_API_MIME_TYPE = "application/vnd.github+json"
         private const val REQUEST_TIMEOUT_DURATION = 20L
     }
 
-    @Bean
+    @Bean("openApiRestClient")
     fun restClient(
         @Value("\${github.url}") url: String,
         @Value("\${github.version-key}") versionKey: String,

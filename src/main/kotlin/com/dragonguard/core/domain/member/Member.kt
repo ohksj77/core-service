@@ -102,4 +102,6 @@ class Member(
     fun getTotalContribution(): Int = this.contributions.total()
 
     fun isLoginMember(): Boolean = authStep == AuthStep.EMAIL
+
+    fun isServiceMember(): Boolean = authStep != AuthStep.NONE
 }

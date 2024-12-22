@@ -29,4 +29,7 @@ class GitRepo(
     fun addMember(member: Member) {
         gitRepoMembers.add(GitRepoMember(this, member))
     }
+
+    fun hasMember(): Boolean =
+        gitRepoMembers.isNotEmpty()
 }

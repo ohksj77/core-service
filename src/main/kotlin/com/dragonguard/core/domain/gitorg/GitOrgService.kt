@@ -37,7 +37,8 @@ class GitOrgService(
         gitOrgRepository.saveAll(gitRepos)
     }
 
-
-    fun getMember(memberId: Long): Member =
+    private fun getMember(memberId: Long): Member =
         memberRepository.findByIdOrNull(memberId) ?: throw EntityNotFoundException.member()
+
+    fun getEntity(name: String): GitOrg = gitOrgRepository.findByName(name) ?: throw EntityNotFoundException.gitOrg()
 }
