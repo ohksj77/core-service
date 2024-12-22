@@ -9,10 +9,10 @@ import org.springframework.web.client.RestClient
 
 @Component
 class SearchGitRepoClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
-        private const val PATH = "search/%repositories?q=%s&per_page=10&page=%d"
+        private const val PATH = "search/repositories?q=%s&per_page=10&page=%d"
         private const val FILTER_DELIMITER = "%%20"
     }
 
@@ -21,7 +21,7 @@ class SearchGitRepoClient(
         filters: List<String>?,
         githubToken: String,
     ): SearchGitRepoClientResponse =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.q, request.page) + filters?.joinToString { FILTER_DELIMITER })
             .headers { it.setBearerAuth(githubToken) }

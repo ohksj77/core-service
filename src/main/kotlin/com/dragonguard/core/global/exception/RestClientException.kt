@@ -25,5 +25,7 @@ class RestClientException(
         fun gitRepoLanguage() = RestClientException("Git Repo Language Client Error")
 
         fun gitRepoSparkLine() = RestClientException("Git Repo Spark Line Client Error")
+        
+        fun gitRepoInternal() = RestClientException("Git Repo Internal Client Error")
     }
 }

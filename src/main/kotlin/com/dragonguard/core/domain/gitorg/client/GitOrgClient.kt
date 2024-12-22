@@ -10,14 +10,14 @@ import org.springframework.web.client.RestClient
 
 @Component
 class GitOrgClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
         private const val PATH = "users/%s/orgs?per_page=100"
     }
 
     fun request(request: GitOrgClientRequest): List<GitOrgClientResponse> =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.githubId))
             .headers { it.setBearerAuth(request.githubToken) }

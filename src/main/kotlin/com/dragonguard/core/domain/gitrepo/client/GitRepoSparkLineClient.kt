@@ -9,14 +9,14 @@ import org.springframework.web.client.RestClient
 
 @Component
 class GitRepoSparkLineClient(
-    private val restClient: RestClient,
+    private val openApiRestClient: RestClient,
 ) {
     companion object {
         private const val PATH = "repos/%s/stats/participation"
     }
 
     fun request(request: GitRepoDetailsClientRequest): GitRepoSparkLineResponse =
-        restClient
+        openApiRestClient
             .get()
             .uri(PATH.format(request.name))
             .headers { it.setBearerAuth(request.githubToken) }
