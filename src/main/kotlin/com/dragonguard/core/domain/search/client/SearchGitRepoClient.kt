@@ -23,7 +23,12 @@ class SearchGitRepoClient(
     ): SearchGitRepoClientResponse =
         openApiRestClient
             .get()
-            .uri(PATH.format(request.q, request.page) + filters?.joinToString { FILTER_DELIMITER })
+            .uri(
+                PATH.format(
+                    "${request.q}$FILTER_DELIMITER${filters?.joinToString(FILTER_DELIMITER)}",
+                    request.page
+                )
+            )
             .headers { it.setBearerAuth(githubToken) }
             .accept(MediaType.APPLICATION_JSON)
             .acceptCharset(Charsets.UTF_8)

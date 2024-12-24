@@ -3,8 +3,6 @@ package com.dragonguard.core.domain.gitrepo
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.global.audit.BaseEntity
 import jakarta.persistence.CascadeType
-import jakarta.persistence.CollectionTable
-import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.OneToMany
 import org.hibernate.annotations.NaturalId
@@ -17,11 +15,6 @@ class GitRepo(
     val name: String
 ) : BaseEntity() {
 
-    @CollectionTable
-    @ElementCollection
-    var sparkLine: MutableList<Int> = mutableListOf()
-        protected set
-
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE], mappedBy = "gitRepo")
     var gitRepoMembers: MutableList<GitRepoMember> = mutableListOf()
         protected set
@@ -30,6 +23,6 @@ class GitRepo(
         gitRepoMembers.add(GitRepoMember(this, member))
     }
 
-    fun hasMember(): Boolean =
-        gitRepoMembers.isNotEmpty()
+    fun hasMemberContribution(): Boolean =
+        gitRepoMembers.none { it.gitRepoContribution == null }
 }

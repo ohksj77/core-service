@@ -2,6 +2,7 @@ package com.dragonguard.core.domain.rank
 
 import com.dragonguard.core.domain.contribution.dto.ContributionRequest
 import com.dragonguard.core.domain.member.Member
+import com.dragonguard.core.domain.organization.Organization
 import com.dragonguard.core.domain.organization.OrganizationType
 import com.dragonguard.core.domain.rank.dto.MemberRankResponse
 import com.dragonguard.core.domain.rank.dto.OrganizationRankResponse
@@ -39,4 +40,6 @@ interface RankService {
     fun getMemberProfileRank(member: Member): ProfileRank
 
     fun getMemberRankValue(member: Member): Int
+
+    fun addOrganizationContribution(member: Member, organization: Organization)
 }

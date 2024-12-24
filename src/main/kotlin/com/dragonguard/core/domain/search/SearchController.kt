@@ -1,8 +1,6 @@
 package com.dragonguard.core.domain.search
 
 import com.dragonguard.core.domain.member.Member
-import com.dragonguard.core.domain.search.client.dto.SearchGitRepoClientResponse
-import com.dragonguard.core.domain.search.client.dto.SearchMemberClientResponse
 import com.dragonguard.core.domain.search.dto.SearchRequest
 import com.dragonguard.core.global.auth.AuthorizedMember
 import jakarta.validation.Valid
@@ -21,12 +19,12 @@ class SearchController(
     fun getUsersSearchResult(
         @ModelAttribute @Valid request: SearchRequest,
         @AuthorizedMember member: Member,
-    ): List<SearchMemberClientResponse.Companion.SearchMemberResponse> = searchService.searchMembers(request, member)
+    ) = searchService.searchMembers(request, member)
 
     @GetMapping(params = ["type=GIT_REPO"])
     fun getGitReposSearchResult(
         @ModelAttribute @Valid request: SearchRequest,
         @RequestParam(required = false) filters: List<String>?,
         @AuthorizedMember member: Member,
-    ): List<SearchGitRepoClientResponse.Companion.SearchGitRepoClientResponseItem> = searchService.searchGitRepos(request, filters, member)
+    ) = searchService.searchGitRepos(request, filters, member)
 }

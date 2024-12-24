@@ -19,7 +19,6 @@ class RankRedisService(
     private val redisTemplate: RedisTemplate<String, String>,
     private val objectMapper: ObjectMapper,
 ) : RankService {
-
     init {
         objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
     }
@@ -45,6 +44,10 @@ class RankRedisService(
         } catch (e: Exception) {
             throw RankAccessException.update(e)
         }
+    }
+
+    override fun addOrganizationContribution(member: Member, organization: Organization) {
+        updateRank(ORGANIZATION_RANK_KEY, organization.id.toString(), member.contributions.total())
     }
 
     private fun updateOrganizationDetails(organization: Organization?) {

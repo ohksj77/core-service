@@ -60,7 +60,7 @@ class GitRepoService(
         val sparkLineResponse = gitRepoSparkLineClient.request(GitRepoDetailsClientRequest(name, member.githubToken!!))
         val gitRepo = getEntity(name)
 
-        if (gitRepo.hasMember()) {
+        if (gitRepo.hasMemberContribution()) {
             gitRepoMemberProducer.produce(
                 GitRepoInternalRequest(
                     gitRepo.id!!,

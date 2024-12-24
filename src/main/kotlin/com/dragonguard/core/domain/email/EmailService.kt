@@ -5,6 +5,7 @@ import com.dragonguard.core.domain.email.dto.EmailCheckResponse
 import com.dragonguard.core.domain.email.dto.EmailSendRequest
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.organization.OrganizationRepository
+import com.dragonguard.core.domain.rank.RankService
 import com.dragonguard.core.global.exception.EntityNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -15,6 +16,7 @@ class EmailService(
     private val emailRepository: EmailRepository,
     private val emailSender: EmailSender,
     private val organizationRepository: OrganizationRepository,
+    private val rankService: RankService,
 ) {
     fun send(organizationId: Long, member: Member): Long? {
         val email: Email = emailRepository.save(Email(organizationId, member.email!!))
@@ -39,6 +41,7 @@ class EmailService(
             val organization = organizationRepository.findByIdOrNull(email.organizationId)
                 ?: throw EntityNotFoundException.organization()
             organization.addMember(member)
+            rankService.addOrganizationContribution(member, organization)
         }
         return EmailCheckResponse(isValidCode)
     }
