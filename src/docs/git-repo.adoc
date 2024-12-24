@@ -9,3 +9,15 @@
 === 회원 Git 저장소 목록 조회
 
 operation::get git-repos[snippets='http-request,http-response,request-headers,response-fields']
+
+=== Git Organization에 속한 Git Repository 목록 조회
+
+operation::get git-orgs git-repos[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 회원 Git 저장소 목록 조회
+
+operation::get git-repos details[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
+
+=== 회원 Git 저장소 목록 조회
+
+operation::get git-repos compare[snippets='http-request,http-response,request-headers,query-parameters,response-fields']
