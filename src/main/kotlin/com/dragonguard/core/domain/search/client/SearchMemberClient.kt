@@ -12,7 +12,7 @@ class SearchMemberClient(
     private val openApiRestClient: RestClient,
 ) {
     companion object {
-        private const val PATH = "search/users?q=%s&per_page=%d&page=10"
+        private const val PATH = "search/users?q=%s&per_page=10&page=%d"
     }
 
     fun request(

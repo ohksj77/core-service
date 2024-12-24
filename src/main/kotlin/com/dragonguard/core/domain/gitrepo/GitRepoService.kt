@@ -13,6 +13,7 @@ import com.dragonguard.core.domain.gitrepo.dto.GitRepoCompareResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoResponse
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.domain.member.MemberRepository
+import com.dragonguard.core.domain.search.client.dto.SearchGitRepoClientResponse
 import com.dragonguard.core.global.exception.EntityNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Async
@@ -92,5 +93,10 @@ class GitRepoService(
         val secondGitRepoResponse = getGitRepoDetails(second, memberId)
 
         return gitRepoMapper.toGitRepoCompareResponse(firstGitRepoResponse, secondGitRepoResponse)
+    }
+
+    fun saveGitRepos(response: List<SearchGitRepoClientResponse.Companion.SearchGitRepoClientResponseItem>) {
+        val gitRepos = response.map { GitRepo(it.fullName) }
+        gitRepoRepository.saveAll(gitRepos)
     }
 }

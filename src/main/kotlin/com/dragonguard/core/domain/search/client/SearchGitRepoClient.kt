@@ -6,6 +6,8 @@ import com.dragonguard.core.global.exception.RestClientException
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Component
 class SearchGitRepoClient(
@@ -13,7 +15,7 @@ class SearchGitRepoClient(
 ) {
     companion object {
         private const val PATH = "search/repositories?q=%s&per_page=10&page=%d"
-        private const val FILTER_DELIMITER = "%%20"
+        private const val FILTER_DELIMITER = "%20"
     }
 
     fun request(
@@ -25,7 +27,15 @@ class SearchGitRepoClient(
             .get()
             .uri(
                 PATH.format(
-                    "${request.q}$FILTER_DELIMITER${filters?.joinToString(FILTER_DELIMITER)}",
+                    URLEncoder.encode(
+                        "${request.q}${
+                            if (filters != null) FILTER_DELIMITER.plus(
+                                filters.joinToString(
+                                    FILTER_DELIMITER
+                                )
+                            ) else ""
+                        }", StandardCharsets.UTF_8
+                    ),
                     request.page
                 )
             )
