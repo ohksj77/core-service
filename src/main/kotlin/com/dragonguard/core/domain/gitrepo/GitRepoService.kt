@@ -39,12 +39,10 @@ class GitRepoService(
     @Async("virtualAsyncTaskExecutor")
     fun updateGitRepo(memberId: Long, githubToken: String, githubId: String) {
         val response = memberGitRepoClient.request(GitRepoClientRequest(githubId, githubToken))
-        val gitRepos = response.filter { it.fullName != null }.map {
+        response.filter { it.fullName != null }.forEach {
             val gitRepo = gitRepoRepository.findByName(it.fullName!!) ?: gitRepoRepository.save(GitRepo(it.fullName))
             gitRepo.addMember(getMember(memberId))
-            gitRepo
-        }.toList()
-        gitRepoRepository.saveAll(gitRepos)
+        }
     }
 
     fun getMember(memberId: Long): Member =
@@ -95,8 +93,8 @@ class GitRepoService(
         return gitRepoMapper.toGitRepoCompareResponse(firstGitRepoResponse, secondGitRepoResponse)
     }
 
+    @Transactional
     fun saveGitRepos(response: List<SearchGitRepoClientResponse.Companion.SearchGitRepoClientResponseItem>) {
-        val gitRepos = response.map { GitRepo(it.fullName) }
-        gitRepoRepository.saveAll(gitRepos)
+        response.forEach { gitRepoRepository.findByName(it.fullName) ?: gitRepoRepository.save(GitRepo(it.fullName)) }
     }
 }
