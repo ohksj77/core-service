@@ -30,6 +30,8 @@ class RankRedisService(
     ) {
         try {
             updateRank(MEMBER_RANK_KEY, contributionRequest.githubId, totalAmount)
+            updateMemberDetails(member)
+
             contributionRequest.organizationId?.let {
                 updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${it}", contributionRequest.githubId, totalAmount)
                 updateRank(
@@ -40,21 +42,21 @@ class RankRedisService(
                 updateRank(ORGANIZATION_RANK_KEY, it.toString(), totalAmount)
                 updateOrganizationDetails(member.organization)
             }
-            updateMemberDetails(member)
         } catch (e: Exception) {
             throw RankAccessException.update(e)
         }
     }
 
     override fun addOrganizationContribution(member: Member, organization: Organization) {
-        val total = member.contributions.total()
-        updateRank(ORGANIZATION_RANK_KEY, organization.id.toString(), total)
-        updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${organization.id}", member.githubId, total)
+        val totalAmount = member.contributions.total()
+        updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${organization.id}", member.githubId, totalAmount)
         updateRank(
             "${ORGANIZATION_TYPE_RANK_KEY}${organization.organizationType.name}",
             member.githubId,
-            total
+            totalAmount
         )
+        updateRank(ORGANIZATION_RANK_KEY, organization.id.toString(), totalAmount)
+        updateOrganizationDetails(organization)
     }
 
     private fun updateOrganizationDetails(organization: Organization?) {

@@ -24,5 +24,5 @@ class GitRepo(
     }
 
     fun hasMemberContribution(): Boolean =
-        gitRepoMembers.none { it.gitRepoContribution == null }
+        gitRepoMembers.isEmpty() || gitRepoMembers.none { it.gitRepoContribution == null }
 }
