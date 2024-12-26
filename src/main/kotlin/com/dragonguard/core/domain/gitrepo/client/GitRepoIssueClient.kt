@@ -1,6 +1,7 @@
 package com.dragonguard.core.domain.gitrepo.client
 
 import com.dragonguard.core.domain.gitrepo.client.dto.GitRepoDetailsClientRequest
+import com.dragonguard.core.domain.gitrepo.client.dto.GitRepoIssueResponse
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -29,7 +30,7 @@ class GitRepoIssueClient(
     private fun requestOne(
         request: GitRepoDetailsClientRequest,
         page: Int,
-    ): List<String>? =
+    ): List<GitRepoIssueResponse>? = try {
         openApiRestClient
             .get()
             .uri(PATH.format(request.name, page))
@@ -37,5 +38,8 @@ class GitRepoIssueClient(
             .accept(MediaType.APPLICATION_JSON)
             .acceptCharset(Charsets.UTF_8)
             .retrieve()
-            .body(object : ParameterizedTypeReference<List<String>>() {})
+            .body(object : ParameterizedTypeReference<List<GitRepoIssueResponse>>() {})
+    } catch (e: Exception) {
+        null
+    }
 }

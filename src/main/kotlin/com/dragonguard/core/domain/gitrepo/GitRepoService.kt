@@ -192,16 +192,18 @@ class GitRepoService(
 
     private fun getStatistics(gitRepo: GitRepo): StatisticsResponse {
         val gitRepoMembers = gitRepo.gitRepoMembers
-        if (isContributionEmpty(gitRepoMembers)) return getStatisticsResponse(emptyList(), emptyList(), emptyList())
+        if (isContributionEmpty(gitRepoMembers)) {
+            return getStatisticsResponse(emptyList(), emptyList(), emptyList())
+        }
 
-        val commits = getContributionList(gitRepoMembers) { it.gitRepoContribution!!.commits }
-        val additions = getContributionList(gitRepoMembers) { it.gitRepoContribution!!.additions }
-        val deletions = getContributionList(gitRepoMembers) { it.gitRepoContribution!!.deletions }
+        val commits = getContributions(gitRepoMembers) { it.gitRepoContribution!!.commits }
+        val additions = getContributions(gitRepoMembers) { it.gitRepoContribution!!.additions }
+        val deletions = getContributions(gitRepoMembers) { it.gitRepoContribution!!.deletions }
 
         return getStatisticsResponse(commits, additions, deletions)
     }
 
-    private fun getContributionList(
+    private fun getContributions(
         gitRepoMembers: List<GitRepoMember>,
         function: (GitRepoMember) -> Int
     ): List<Int> =
