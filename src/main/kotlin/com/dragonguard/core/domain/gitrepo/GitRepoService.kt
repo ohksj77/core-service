@@ -79,7 +79,7 @@ class GitRepoService(
                 name
             )
         )
-        val gitRepoMembers = gitRepoMemberRepository.findAllByIdIn(gitRepoMemberResponse.gitRepoMemberIds)
+        val gitRepoMembers = gitRepoMemberRepository.findAllByIdIn(gitRepoMemberResponse.gitRepoMemberIds!!)
         return gitRepoMapper.toGitRepoResponse(sparkLineResponse, gitRepoMembers)
     }
 
@@ -95,6 +95,6 @@ class GitRepoService(
 
     @Transactional
     fun saveGitRepos(response: List<SearchGitRepoClientResponse.Companion.SearchGitRepoClientResponseItem>) {
-        response.forEach { gitRepoRepository.findByName(it.fullName) ?: gitRepoRepository.save(GitRepo(it.fullName)) }
+        response.forEach { gitRepoRepository.findByName(it.fullName!!) ?: gitRepoRepository.save(GitRepo(it.fullName)) }
     }
 }

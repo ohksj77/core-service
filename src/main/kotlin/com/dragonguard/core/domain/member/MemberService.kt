@@ -75,8 +75,8 @@ class MemberService(
     fun isServiceMember(searchMemberResponses: List<SearchMemberClientResponse.Companion.SearchMemberClientResponseItem>): ServiceMembers =
         searchMemberResponses
             .filter {
-                memberRepository.existsByGithubId(it.login)
-            }.map { it.login }
+                memberRepository.existsByGithubId(it.login!!)
+            }.map { it.login!! }
             .let { ServiceMembers(it) }
 
     fun verify(member: Member): MemberVerifyResponse = MemberVerifyResponse(member.isLoginMember())

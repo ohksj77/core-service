@@ -4,6 +4,7 @@ import com.dragonguard.core.domain.gitrepo.client.dto.GitRepoInternalClientRespo
 import com.dragonguard.core.domain.gitrepo.client.dto.GitRepoInternalRequest
 import com.dragonguard.core.global.exception.RestClientException
 import org.springframework.http.MediaType
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
@@ -15,6 +16,10 @@ class GitRepoMemberInternalClient(
         private const val PATH = "git-repos"
     }
 
+    @Retryable(
+        value = [Exception::class],
+        maxAttempts = 3,
+    )
     fun request(request: GitRepoInternalRequest): GitRepoInternalClientResponse =
         internalRestClient
             .post()

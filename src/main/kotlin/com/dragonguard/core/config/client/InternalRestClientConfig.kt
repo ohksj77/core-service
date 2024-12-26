@@ -12,6 +12,7 @@ import org.springframework.http.client.JdkClientHttpRequestFactory
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestClient
 import java.net.http.HttpClient
+import java.time.Duration
 import java.util.concurrent.Executors
 
 @Configuration
@@ -34,6 +35,7 @@ class InternalRestClientConfig {
             JdkClientHttpRequestFactory(
                 HttpClient
                     .newBuilder()
+                    .connectTimeout(Duration.ofSeconds(30))
                     .executor(Executors.newVirtualThreadPerTaskExecutor())
                     .build(),
             )

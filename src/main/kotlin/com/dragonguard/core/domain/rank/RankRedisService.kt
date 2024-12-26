@@ -47,7 +47,14 @@ class RankRedisService(
     }
 
     override fun addOrganizationContribution(member: Member, organization: Organization) {
-        updateRank(ORGANIZATION_RANK_KEY, organization.id.toString(), member.contributions.total())
+        val total = member.contributions.total()
+        updateRank(ORGANIZATION_RANK_KEY, organization.id.toString(), total)
+        updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${organization.id}", member.githubId, total)
+        updateRank(
+            "${ORGANIZATION_TYPE_RANK_KEY}${organization.organizationType.name}",
+            member.githubId,
+            total
+        )
     }
 
     private fun updateOrganizationDetails(organization: Organization?) {
@@ -77,9 +84,9 @@ class RankRedisService(
 
     private fun getOrganizationDetailsKey(id: String): String = ORGANIZATION_DETAILS + id
 
-    private fun convertToJson(memberRank: Any): String =
+    private fun convertToJson(details: Any): String =
         try {
-            objectMapper.writeValueAsString(memberRank)
+            objectMapper.writeValueAsString(details)
         } catch (e: JsonProcessingException) {
             throw RankAccessException.parseJson(e)
         }
@@ -112,8 +119,7 @@ class RankRedisService(
         getMemberRank("${ORGANIZATION_MEMBER_RANK_KEY}$organizationId", page, size)
 
     private fun getOrganizationRank(target: String, page: Long, size: Long): List<OrganizationRankResponse> = try {
-        val start = page * size
-        val end = (page + 1) * size - 1
+        val (start, end) = pageSizeToStartEnd(page, size)
         val rank = redisTemplate.opsForZSet().reverseRangeWithScores(target, start, end)
         rank?.map {
             getOrganizationDetails(it.value.toString().toLong(), it.score?.toLong() ?: 0L)
@@ -123,14 +129,19 @@ class RankRedisService(
     }
 
     private fun getMemberRank(target: String, page: Long, size: Long): List<MemberRankResponse> = try {
-        val start = page * size
-        val end = (page + 1) * size - 1
+        val (start, end) = pageSizeToStartEnd(page, size)
         val rank = redisTemplate.opsForZSet().reverseRangeWithScores(target, start, end)
         rank?.map {
             getMemberDetails(it.value.toString(), it.score?.toLong() ?: 0L)
         } ?: emptyList()
     } catch (e: Exception) {
         throw RankAccessException.get(e)
+    }
+
+    private fun pageSizeToStartEnd(page: Long, size: Long): Pair<Long, Long> {
+        val start = page * size
+        val end = (page + 1) * size - 1
+        return Pair(start, end)
     }
 
     override fun getMemberProfileRank(member: Member): ProfileRank = try {
@@ -188,7 +199,7 @@ class RankRedisService(
             ?.toList() ?: emptyList()
 
     private fun getOrganizationDetails(id: Long, score: Long): OrganizationRankResponse {
-        val json = redisTemplate.opsForValue().get(getMemberDetailsKey(id.toString()))
+        val json = redisTemplate.opsForValue().get(getOrganizationDetailsKey(id.toString()))
         val response = convertFromJson(json, OrganizationRankResponse::class.java)
         return response.apply { this.contributionAmount = score }
     }

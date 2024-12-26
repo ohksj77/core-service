@@ -29,20 +29,20 @@ class ContributionClientService(
         val request = ContributionClientRequest(contributionRequest.githubId, contributionRequest.githubToken, year)
 
         val pullRequestFuture =
-            CompletableFuture.supplyAsync({ getPullRequestContribution(request).total_count }, executor)
-        val issueFuture = CompletableFuture.supplyAsync({ getIssueContribution(request).total_count }, executor)
+            CompletableFuture.supplyAsync({ getPullRequestContribution(request).totalCount }, executor)
+        val issueFuture = CompletableFuture.supplyAsync({ getIssueContribution(request).totalCount }, executor)
         val codeReviewFuture =
-            CompletableFuture.supplyAsync({ getCodeReviewContribution(request).total_count }, executor)
-        val commitFuture = CompletableFuture.supplyAsync({ getCommitContribution(request).total_count }, executor)
+            CompletableFuture.supplyAsync({ getCodeReviewContribution(request).totalCount }, executor)
+        val commitFuture = CompletableFuture.supplyAsync({ getCommitContribution(request).totalCount }, executor)
 
         val allOf = CompletableFuture.allOf(pullRequestFuture, issueFuture, codeReviewFuture, commitFuture)
         allOf.join()
 
         return ContributionClientResult(
-            commitFuture.get(),
-            pullRequestFuture.get(),
-            issueFuture.get(),
-            codeReviewFuture.get()
+            commitFuture.get()!!,
+            pullRequestFuture.get()!!,
+            issueFuture.get()!!,
+            codeReviewFuture.get()!!,
         )
     }
 
