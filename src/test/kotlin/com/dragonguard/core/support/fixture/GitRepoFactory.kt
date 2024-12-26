@@ -1,7 +1,7 @@
 package com.dragonguard.core.support.fixture
 
 import com.dragonguard.core.domain.gitrepo.dto.GitOrgGitRepoResponse
-import com.dragonguard.core.domain.gitrepo.dto.GitRepoCompareResponse
+import com.dragonguard.core.domain.gitrepo.dto.GitRepoMemberCompareResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoMemberResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoResponse
 
@@ -42,7 +42,7 @@ class GitRepoFactory {
             ),
         )
 
-        fun createGitRepoCompareResponse() = GitRepoCompareResponse(
+        fun createGitRepoCompareResponse() = GitRepoMemberCompareResponse(
             createGitRepoResponse(), createGitRepoResponse(),
         )
     }

@@ -1,7 +1,7 @@
 package com.dragonguard.core.domain.gitrepo
 
 import com.dragonguard.core.domain.gitrepo.client.dto.GitRepoSparkLineResponse
-import com.dragonguard.core.domain.gitrepo.dto.GitRepoCompareResponse
+import com.dragonguard.core.domain.gitrepo.dto.GitRepoMemberCompareResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoMemberResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoResponse
 import org.springframework.stereotype.Component
@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component
 @Component
 class GitRepoMapper {
 
-    fun toGitRepoMemberResponses(gitRepoMembers: List<GitRepoMember>) = gitRepoMembers.map {
-        toGitRepoMemberResponse(it)
-    }
+    fun toGitRepoMemberResponses(gitRepoMembers: List<GitRepoMember>): List<GitRepoMemberResponse> =
+        gitRepoMembers.map {
+            toGitRepoMemberResponse(it)
+        }
 
     private fun toGitRepoMemberResponse(it: GitRepoMember) = GitRepoMemberResponse(
         it.member.githubId,
@@ -22,15 +23,18 @@ class GitRepoMapper {
         it.member.isServiceMember(),
     )
 
-    fun toGitRepoResponse(
-        sparkLineResponse: GitRepoSparkLineResponse,
-        gitRepoMembers: List<GitRepoMember>
-    ): GitRepoResponse =
-        GitRepoResponse(
-            sparkLineResponse.all,
-            toGitRepoMemberResponses(gitRepoMembers)
+    fun toGitRepoCompareResponse(
+        firstGitRepoMembers: List<GitRepoMember>,
+        secondGitRepoMembers: List<GitRepoMember>
+    ): GitRepoMemberCompareResponse =
+        GitRepoMemberCompareResponse(
+            toGitRepoMemberResponses(firstGitRepoMembers),
+            toGitRepoMemberResponses(secondGitRepoMembers)
         )
 
-    fun toGitRepoCompareResponse(first: GitRepoResponse, second: GitRepoResponse): GitRepoCompareResponse =
-        GitRepoCompareResponse(first, second)
+    fun toGitRepoResponse(sparkLine: GitRepoSparkLineResponse, gitRepoMembers: List<GitRepoMember>): GitRepoResponse =
+        GitRepoResponse(
+            sparkLine.all,
+            toGitRepoMemberResponses(gitRepoMembers),
+        )
 }

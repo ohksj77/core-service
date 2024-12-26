@@ -2,6 +2,7 @@ package com.dragonguard.core.domain.gitrepo
 
 import com.dragonguard.core.domain.gitrepo.dto.GitOrgGitRepoResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoCompareResponse
+import com.dragonguard.core.domain.gitrepo.dto.GitRepoMemberCompareResponse
 import com.dragonguard.core.domain.gitrepo.dto.GitRepoResponse
 import com.dragonguard.core.domain.member.Member
 import com.dragonguard.core.global.auth.AuthorizedMember
@@ -24,7 +25,7 @@ class GitRepoController(
         gitRepoService.getNamesByMemberId(memberId)
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/git-organizations")
+    @GetMapping("git-organizations")
     fun getMemberGitOrganizationRepo(
         @RequestParam name: String,
         @AuthorizedMember member: Member,
@@ -39,10 +40,18 @@ class GitRepoController(
     ): GitRepoResponse = gitRepoService.getGitRepoDetails(name, memberId)
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/compare")
-    fun compare(
+    @GetMapping("compare/git-repos-members")
+    fun compareGitReposMembers(
         @RequestParam first: String,
         @RequestParam second: String,
         @AuthorizedMemberId memberId: Long,
-    ): GitRepoCompareResponse = gitRepoService.compare(first, second, memberId)
+    ): GitRepoMemberCompareResponse = gitRepoService.compareGitReposMembers(first, second, memberId)
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("compare")
+    fun compare(
+        @RequestParam first: String,
+        @RequestParam second: String,
+        @AuthorizedMember member: Member,
+    ): GitRepoCompareResponse = gitRepoService.compare(first, second, member)
 }

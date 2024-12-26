@@ -125,7 +125,7 @@ class GitRepoControllerTest : RestDocsTest() {
 
         BDDMockito
             .given(
-                gitRepoService.getGitRepoDetails(any(String::class.java), any(Long::class.java)),
+                gitRepoService.requestAndGetGitRepoMembers(any(String::class.java), any(Long::class.java)),
             ).willReturn(expected)
 
         // when
@@ -178,7 +178,11 @@ class GitRepoControllerTest : RestDocsTest() {
 
         BDDMockito
             .given(
-                gitRepoService.compare(any(String::class.java), any(String::class.java), any(Long::class.java)),
+                gitRepoService.compareGitReposMembers(
+                    any(String::class.java),
+                    any(String::class.java),
+                    any(Long::class.java)
+                ),
             ).willReturn(expected)
 
         // when
