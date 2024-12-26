@@ -4,6 +4,7 @@ import com.dragonguard.core.global.exception.NotInitializedException
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.PostLoad
@@ -20,7 +21,7 @@ import java.util.*
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseEntity : Persistable<Long> {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null
 
     @CreatedDate

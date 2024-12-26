@@ -36,7 +36,7 @@ class RankRedisService(
                 updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${it}", contributionRequest.githubId, totalAmount)
                 updateRank(
                     "${ORGANIZATION_TYPE_RANK_KEY}${contributionRequest.organizationType?.name}",
-                    contributionRequest.githubId,
+                    contributionRequest.organizationId.toString(),
                     totalAmount
                 )
                 updateRank(ORGANIZATION_RANK_KEY, it.toString(), totalAmount)
@@ -52,7 +52,7 @@ class RankRedisService(
         updateRank("${ORGANIZATION_MEMBER_RANK_KEY}${organization.id}", member.githubId, totalAmount)
         updateRank(
             "${ORGANIZATION_TYPE_RANK_KEY}${organization.organizationType.name}",
-            member.githubId,
+            organization.id.toString(),
             totalAmount
         )
         updateRank(ORGANIZATION_RANK_KEY, organization.id.toString(), totalAmount)
@@ -190,9 +190,9 @@ class RankRedisService(
         redisTemplate.opsForZSet().rank("${ORGANIZATION_MEMBER_RANK_KEY}${member.organization?.id}", member.githubId)
 
     private fun calculateAdjacentRanks(organizationRank: Long, totalMemberNum: Long) =
-        when {
-            organizationRank == 0L -> longArrayOf(0L, 3L)
-            organizationRank == totalMemberNum - 1L -> longArrayOf(organizationRank - 3L, totalMemberNum)
+        when (organizationRank) {
+            0L -> longArrayOf(0L, 3L)
+            totalMemberNum - 1L -> longArrayOf(organizationRank - 3L, totalMemberNum)
             else -> longArrayOf(organizationRank - 1L, organizationRank + 1L)
         }
 

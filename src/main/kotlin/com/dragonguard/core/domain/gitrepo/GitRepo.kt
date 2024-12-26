@@ -20,9 +20,11 @@ class GitRepo(
         protected set
 
     fun addMember(member: Member) {
-        gitRepoMembers.add(GitRepoMember(this, member))
+        if (gitRepoMembers.none { it.isSameMember(member) }) {
+            gitRepoMembers.add(GitRepoMember(this, member))
+        }
     }
 
     fun hasMemberContribution(): Boolean =
-        gitRepoMembers.isEmpty() || gitRepoMembers.none { it.gitRepoContribution == null }
+        gitRepoMembers.isNotEmpty() && gitRepoMembers.none { it.gitRepoContribution == null }
 }
