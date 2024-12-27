@@ -14,14 +14,14 @@ class GitRepoIssueClient(
     companion object {
         private const val PATH = "repos/%s/issues?state=closed&per_page=100&page=%d"
         private const val START_PAGE = 1
-        private const val MAX_TRY = 10
+        private const val MAX_TRY = 3
     }
 
     fun request(request: GitRepoDetailsClientRequest): Int =
         (START_PAGE..MAX_TRY)
             .asSequence()
             .map { requestOne(request, it) }
-            .takeWhile { it != null }
+            .takeWhile { !it.isNullOrEmpty() }
             .filterNotNull()
             .flatMap { it }
             .distinct()
