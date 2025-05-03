@@ -78,17 +78,16 @@ class Member(
             .map(::SimpleGrantedAuthority)
             .toList()
 
-    fun hasNoAuthStep(): Boolean = authStep == AuthStep.NONE
-
-    fun updateGithubToken(githubToken: String) {
-        this.githubToken = githubToken
-    }
-
-    fun join(
+    fun joinIfNew(
         profileImage: String,
+        githubToken: String,
     ) {
+        if (this.authStep.isInitialized()) {
+            return
+        }
         this.authStep = AuthStep.GITHUB
         this.profileImage = profileImage
+        this.githubToken = githubToken
     }
 
     fun addContribution(contributions: List<Contribution>): Int {

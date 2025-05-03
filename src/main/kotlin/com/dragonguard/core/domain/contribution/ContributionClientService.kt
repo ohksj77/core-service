@@ -35,8 +35,7 @@ class ContributionClientService(
             CompletableFuture.supplyAsync({ getCodeReviewContribution(request).totalCount }, executor)
         val commitFuture = CompletableFuture.supplyAsync({ getCommitContribution(request).totalCount }, executor)
 
-        val allOf = CompletableFuture.allOf(pullRequestFuture, issueFuture, codeReviewFuture, commitFuture)
-        allOf.join()
+        CompletableFuture.allOf(pullRequestFuture, issueFuture, codeReviewFuture, commitFuture).join()
 
         return ContributionClientResult(
             commitFuture.get()!!,

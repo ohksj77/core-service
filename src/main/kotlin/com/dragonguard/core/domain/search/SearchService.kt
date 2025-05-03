@@ -25,6 +25,7 @@ class SearchService(
     ): List<SearchMemberClientResponse.Companion.SearchMemberResponse> {
         val result = member.githubToken?.let { searchMemberClient.request(request, it) }
         val serviceMembers = memberService.isServiceMember(result?.items ?: emptyList())
+
         return result?.toSearchMemberResponse(serviceMembers) ?: emptyList()
     }
 
@@ -36,6 +37,7 @@ class SearchService(
         val response =
             member.githubToken?.let { searchGitRepoClient.request(request, filters, it).items } ?: emptyList()
         gitRepoService.saveGitRepos(response)
+
         return response
     }
 }

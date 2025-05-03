@@ -25,7 +25,7 @@ class ContributionFacade(
         val updated =
             contributionService.saveContribution(contributionClientResult, contributionRequest.memberId, year)
 
-        if (updated <= 0) {
+        if (updated.hasValue()) {
             return
         }
 
@@ -35,6 +35,9 @@ class ContributionFacade(
             getMember(contributionRequest.memberId)
         )
     }
+
+    private fun Int.hasValue(): Boolean =
+        this > 0
 
     private fun getMember(memberId: Long): Member =
         memberRepository.findById(memberId).orElseThrow { throw EntityNotFoundException.member() }

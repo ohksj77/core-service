@@ -40,10 +40,7 @@ class MemberService(
         val member: Member =
             getEntityByGithubId(githubId)
 
-        if (member.hasNoAuthStep()) {
-            member.join(profileImage)
-        }
-        member.updateGithubToken(userRequest.accessToken.tokenValue)
+        member.joinIfNew(profileImage, userRequest.accessToken.tokenValue)
         return member
     }
 
@@ -69,6 +66,7 @@ class MemberService(
 
     fun getProfile(member: Member): MemberProfileResponse {
         val memberProfileRank = contributionFacade.getMemberProfileRank(member)
+
         return memberMapper.toProfileResponse(member, memberProfileRank)
     }
 
@@ -88,6 +86,7 @@ class MemberService(
             memberRepository.findByIdOrNull(memberId) ?: throw EntityNotFoundException.member()
         val gitRepos: List<String> = gitRepoService.getNamesByMemberId(memberId)
         val rank: Int = contributionFacade.getMemberRank(member)
+
         return memberMapper.toDetailsResponse(member, gitRepos, rank)
     }
 
@@ -96,6 +95,7 @@ class MemberService(
             memberRepository.findByGithubId(githubId) ?: throw EntityNotFoundException.member()
         val gitRepos: List<String> = gitRepoService.getNamesByMemberId(member.id!!)
         val rank: Int = contributionFacade.getMemberRank(member)
+
         return memberMapper.toDetailsResponse(member, gitRepos, rank)
     }
 }

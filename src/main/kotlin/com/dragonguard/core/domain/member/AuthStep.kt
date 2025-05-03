@@ -5,4 +5,8 @@ enum class AuthStep {
     GITHUB,
     EMAIL,
     ;
+
+    fun isInitialized(): Boolean {
+        return this != NONE
+    }
 }

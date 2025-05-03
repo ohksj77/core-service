@@ -25,6 +25,7 @@ class OrganizationService(
             organizationRequest.organizationType!!
         )
         val id = organizationRepository.save(organization).id
+
         return IdResponse(id)
     }
 
@@ -33,6 +34,7 @@ class OrganizationService(
         val organization = getEntity(request.organizationId!!)
         organization.validateAndUpdateEmail(member, request.email!!)
         val emailCodeId = emailService.send(organization.id!!, member)
+
         return IdResponse(emailCodeId)
     }
 
